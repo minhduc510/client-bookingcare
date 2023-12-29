@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
 import { BrowserRouter } from 'react-router-dom'
-import { ThemeProvider } from '@mui/material/styles'
+import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 
 import App from './App.tsx'
 import theme from './configs/theme.ts'
@@ -12,10 +12,10 @@ ReactDOM.createRoot(
 ).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
+      <CssVarsProvider theme={theme}>
         <CssBaseline />
         <App />
-      </ThemeProvider>
+      </CssVarsProvider>
     </BrowserRouter>
   </React.StrictMode>
 )
