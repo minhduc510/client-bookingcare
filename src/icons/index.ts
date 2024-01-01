@@ -1,7 +1,13 @@
 import { IoMdHome } from 'react-icons/io'
-import { FaUserDoctor } from 'react-icons/fa6'
+import { VscError } from 'react-icons/vsc'
+import { GiHamburgerMenu } from 'react-icons/gi'
 import { TfiLayoutSliderAlt } from 'react-icons/tfi'
 import { BsFillMoonStarsFill } from 'react-icons/bs'
+import {
+  FaUserDoctor,
+  FaRegCircleCheck,
+  FaRegCircleXmark
+} from 'react-icons/fa6'
 import {
   IoSunny,
   IoSearch,
@@ -18,6 +24,7 @@ import {
   FaLock,
   FaUser,
   FaInfo,
+  FaCloudUploadAlt,
   FaArrowAltCircleLeft,
   FaArrowAltCircleRight
 } from 'react-icons/fa'
@@ -31,10 +38,15 @@ export {
   IoSunny,
   IoSearch,
   IoMdHome,
+  VscError,
   IoPersonAdd,
   FaUserDoctor,
   RiLogoutBoxFill,
+  GiHamburgerMenu,
   IoSettingsSharp,
+  FaCloudUploadAlt,
+  FaRegCircleXmark,
+  FaRegCircleCheck,
   RiDeleteBin4Fill,
   TfiLayoutSliderAlt,
   BsFillMoonStarsFill,

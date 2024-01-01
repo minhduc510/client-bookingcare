@@ -9,14 +9,20 @@ import {
   TableCell,
   TableBody,
   Pagination,
-  TableContainer
+  TableContainer,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material'
 import {
   FaPen,
   FaLock,
   FaInfo,
   IoPersonAdd,
-  RiDeleteBin4Fill
+  RiDeleteBin4Fill,
+  FaRegCircleCheck,
+  FaRegCircleXmark
 } from '@/icons'
 
 import InputSearch from '@/components/InputSearch'
@@ -24,11 +30,13 @@ import { useState } from 'react'
 import swal from '@/utils/swal'
 import ModelAdd from './ModelAdd'
 import ModelLock from './ModelLock'
+import ModelInfo from './ModelInfo'
 import ModelUpdate from './ModelUpdate'
 
 export default function User() {
   const [openModelAdd, setOpenModelAdd] = useState(false)
   const [openModelLock, setOpenModelLock] = useState(false)
+  const [openModelInfo, setOpenModelInfo] = useState(false)
   const [openModelUpdate, setOpenModelUpdate] =
     useState(false)
 
@@ -41,18 +49,59 @@ export default function User() {
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          marginTop: {
+            xs: 1,
+            sm: 0
+          },
+          alignItems: {
+            xs: 'normal',
+            sm: 'center'
+          },
+          flexDirection: {
+            xs: 'column-reverse',
+            sm: 'row'
+          }
         }}
       >
         <InputSearch />
-        <Button
-          onClick={() => setOpenModelAdd(true)}
-          variant="contained"
-          sx={{ color: 'white' }}
-          startIcon={<IoPersonAdd />}
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            alignItems: 'center',
+            justifyContent: {
+              xs: 'space-between',
+              sm: 'normal'
+            }
+          }}
         >
-          Thêm
-        </Button>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="demo-simple-select-label">
+                Age
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={10}
+                label="Age"
+                // onChange={handleChange}
+              >
+                <MenuItem value={10}>Tất cả</MenuItem>
+                <MenuItem value={20}>Kích hoạt</MenuItem>
+                <MenuItem value={30}>Đã khóa</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Button
+            onClick={() => setOpenModelAdd(true)}
+            variant="contained"
+            sx={{ color: 'white' }}
+            startIcon={<IoPersonAdd />}
+          >
+            Thêm
+          </Button>
+        </Box>
       </Box>
       <Paper
         sx={{
@@ -98,6 +147,9 @@ export default function User() {
                   Số điện thoại
                 </TableCell>
                 <TableCell align="center">
+                  Tình trạng
+                </TableCell>
+                <TableCell align="center">
                   Lựa chọn
                 </TableCell>
               </TableRow>
@@ -115,6 +167,22 @@ export default function User() {
                 <TableCell align="center">
                   0912649791
                 </TableCell>
+                <TableCell align="center">
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 1,
+                      fontWeight: 600,
+                      fontStyle: 'italic',
+                      color: 'green'
+                    }}
+                  >
+                    <FaRegCircleCheck size={18} />
+                    <span>Kích hoạt</span>
+                  </Box>
+                </TableCell>
                 <TableCell
                   align="center"
                   sx={{
@@ -126,6 +194,7 @@ export default function User() {
                 >
                   <Tooltip title="xem chi tiết">
                     <Box
+                      onClick={() => setOpenModelInfo(true)}
                       sx={{
                         bgcolor: 'blue',
                         width: 24,
@@ -209,6 +278,22 @@ export default function User() {
                 <TableCell align="center">
                   0912649791
                 </TableCell>
+                <TableCell align="center">
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 1,
+                      fontWeight: 600,
+                      fontStyle: 'italic',
+                      color: 'red'
+                    }}
+                  >
+                    <FaRegCircleXmark size={18} />
+                    <span>Đã khóa</span>
+                  </Box>
+                </TableCell>
                 <TableCell
                   align="center"
                   sx={{
@@ -220,6 +305,7 @@ export default function User() {
                 >
                   <Tooltip title="xem chi tiết">
                     <Box
+                      onClick={() => setOpenModelInfo(true)}
                       sx={{
                         bgcolor: 'blue',
                         width: 24,
@@ -236,6 +322,9 @@ export default function User() {
                   </Tooltip>
                   <Tooltip title="cập nhật">
                     <Box
+                      onClick={() =>
+                        setOpenModelUpdate(true)
+                      }
                       sx={{
                         bgcolor: 'green',
                         width: 25,
@@ -252,6 +341,7 @@ export default function User() {
                   </Tooltip>
                   <Tooltip title="khóa tài khoản">
                     <Box
+                      onClick={() => setOpenModelLock(true)}
                       sx={{
                         bgcolor: 'orange',
                         width: 25,
@@ -260,7 +350,8 @@ export default function User() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'white'
+                        color: 'white',
+                        cursor: 'pointer'
                       }}
                     >
                       <FaLock size={13} />
@@ -268,6 +359,7 @@ export default function User() {
                   </Tooltip>
                   <Tooltip title="Xóa tài khoản">
                     <Box
+                      onClick={handleDeleteUser}
                       sx={{
                         bgcolor: 'red',
                         width: 25,
@@ -276,703 +368,8 @@ export default function User() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <RiDeleteBin4Fill size={15} />
-                    </Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">
-                  Trần Minh Đức
-                </TableCell>
-                <TableCell align="center">Nam</TableCell>
-                <TableCell align="center">
-                  minhduc@gmail.com
-                </TableCell>
-                <TableCell align="center">
-                  0912649791
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Tooltip title="xem chi tiết">
-                    <Box
-                      sx={{
-                        bgcolor: 'blue',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaInfo size={15} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="cập nhật">
-                    <Box
-                      sx={{
-                        bgcolor: 'green',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaPen size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="khóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'orange',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}
-                    >
-                      <FaLock size={13} />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip title="Xóa tài khoản">
-                    <Box
-                      sx={{
-                        bgcolor: 'red',
-                        width: 25,
-                        height: 25,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
+                        color: 'white',
+                        cursor: 'pointer'
                       }}
                     >
                       <RiDeleteBin4Fill size={15} />
@@ -1003,6 +400,10 @@ export default function User() {
       <ModelUpdate
         open={openModelUpdate}
         setOpen={setOpenModelUpdate}
+      />
+      <ModelInfo
+        open={openModelInfo}
+        setOpen={setOpenModelInfo}
       />
     </>
   )

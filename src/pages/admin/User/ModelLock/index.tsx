@@ -3,7 +3,6 @@ import {
   Box,
   Fade,
   Modal,
-  Theme,
   Button,
   Backdrop,
   Typography,
@@ -16,23 +15,7 @@ import {
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 import swal from '@/utils/swal'
-
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 500,
-  bgcolor: 'background.paper',
-  boxShadow: (theme: Theme) =>
-    `${
-      theme.palette.mode === 'dark'
-        ? theme.boxShadowDark
-        : theme.boxShadowLight
-    }`,
-  p: 4,
-  borderRadius: 2
-}
+import styleModel from '@/helpers/styleModel'
 
 interface IProps {
   open: boolean
@@ -65,7 +48,7 @@ const ModelLock = ({ open, setOpen }: IProps) => {
       }}
     >
       <Fade in={open}>
-        <Box sx={style}>
+        <Box sx={styleModel}>
           <Typography
             id="transition-modal-title"
             variant="h6"
