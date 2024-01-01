@@ -4,22 +4,22 @@ import {
   Fade,
   Modal,
   Button,
-  Select,
-  MenuItem,
   Backdrop,
-  InputLabel,
   Typography,
   FormControl
 } from '@mui/material'
+
 import InputText from '@/components/InputText'
 import styleModel from '@/helpers/styleModel'
+import { FaCloudUploadAlt } from '@/icons'
+import VisuallyHiddenInput from '@/helpers/VisuallyHiddenInput'
 
 interface IProps {
   open: boolean
   setOpen: (open: boolean) => void
 }
 
-const ModelUpdate = ({ open, setOpen }: IProps) => {
+const ModelAdd = ({ open, setOpen }: IProps) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -46,44 +46,25 @@ const ModelUpdate = ({ open, setOpen }: IProps) => {
             variant="h6"
             component="h2"
           >
-            Cập nhật thông tin người dùng
+            Thêm Slide
           </Typography>
-          <Typography
+          <Box
             id="transition-modal-description"
             sx={{ mt: 2 }}
           >
             <FormControl sx={{ width: '100%' }}>
               <Box>
-                <InputText label={'Họ tên'} name={''} />
+                <InputText label={'Tiêu đề'} name={''} />
               </Box>
-              <FormControl
-                fullWidth
-                size="small"
-                sx={{ marginTop: 3 }}
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<FaCloudUploadAlt />}
+                sx={{ maxWidth: '200px', marginTop: 2 }}
               >
-                <InputLabel id="demo-simple-select-label">
-                  Age
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value="male"
-                  label="Age"
-                  // onChange={handleChange}
-                >
-                  <MenuItem value="male">Nam</MenuItem>
-                  <MenuItem value="female">Nữ</MenuItem>
-                </Select>
-              </FormControl>
-              <Box sx={{ marginTop: 3 }}>
-                <InputText label={'Email'} name={''} />
-              </Box>
-              <Box sx={{ marginTop: 3 }}>
-                <InputText
-                  label={'Số điện thoại'}
-                  name={''}
-                />
-              </Box>
+                Upload file
+                <VisuallyHiddenInput type="file" />
+              </Button>
               <Button
                 variant="contained"
                 sx={{ marginTop: 3, color: 'white' }}
@@ -91,11 +72,11 @@ const ModelUpdate = ({ open, setOpen }: IProps) => {
                 Tiếp tục
               </Button>
             </FormControl>
-          </Typography>
+          </Box>
         </Box>
       </Fade>
     </Modal>
   )
 }
 
-export default ModelUpdate
+export default ModelAdd
