@@ -43,7 +43,8 @@ const ItemSlide = ({ data, index }: IProps) => {
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : undefined,
-    border: isDragging ? '1px solid green' : undefined
+    border: isDragging ? '1px solid green' : undefined,
+    borderRadius: '8px'
   }
 
   const [openModelEdit, setOpenModelEdit] = useState(false)
