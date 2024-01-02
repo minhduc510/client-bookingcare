@@ -12,9 +12,9 @@ import {
 } from '@dnd-kit/core'
 import { Box, Button } from '@mui/material'
 
-import { IoPersonAdd } from '@/icons'
 import ModelAdd from './ModelAdd'
 import ItemSlide from './ItemSlide'
+import { IoPersonAdd } from '@/icons'
 import {
   arrayMove,
   SortableContext,
