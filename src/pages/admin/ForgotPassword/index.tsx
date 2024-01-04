@@ -1,10 +1,5 @@
 import { useState } from 'react'
-import { useAppDispatch } from '@/redux/hooks'
-import {
-  Link,
-  useNavigate,
-  useSearchParams
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import {
   Box,
@@ -17,27 +12,18 @@ import {
 
 import path from '@/routes/path'
 import Loading from '@/components/Loading'
-import Options from '@/components/Options'
 import InputText from '@/components/InputText'
 import ReactLogo from '@/assets/svg/logo.svg?react'
 import { apiNoToken } from '@/api'
-import { loginAdded } from '@/redux/slices/auth'
-import {
-  emailValidation,
-  passwordValidation
-} from '@/validation'
+import { emailValidation } from '@/validation'
 
 type Inputs = {
   email: string
-  password: string
 }
 
-const Login = () => {
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const [searchParams] = useSearchParams()
-
-  const [errorMsg, setErrorMsg] = useState<string>('')
+const ForgotPassword = () => {
+  const [msg, setMsg] = useState('')
+  const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const {
@@ -47,32 +33,29 @@ const Login = () => {
     formState: { errors }
   } = useForm({
     defaultValues: {
-      email: '',
-      password: ''
+      email: ''
     }
   })
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    email
+  }) => {
     setLoading(true)
-    const {
-      error,
-      message,
-      data: dataRes
-    } = await apiNoToken.login(data)
+    const { error } = await apiNoToken.sendMailGetPassWord(
+      email
+    )
+    setError(error)
     if (error) {
-      setErrorMsg(message)
+      setMsg('Email không tồn tại')
     } else {
-      dispatch(loginAdded(dataRes.accessToken))
-      setErrorMsg('')
-      const pathName =
-        searchParams.get('continue_url') ??
-        `/${path.admin.path}`
-      navigate(pathName)
+      setMsg(
+        'Gửi Email thành công, vui lòng kiểm tra hộp thư để tiến hành lấy lại mật khẩu ^^'
+      )
     }
     setLoading(false)
   }
-
   return (
     <>
+      {' '}
       <Container sx={{ height: '100vh' }}>
         {loading && <Loading open={loading} />}
         <Stack
@@ -98,13 +81,15 @@ const Login = () => {
             }}
           >
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2>Đăng nhập</h2>
-              {errorMsg && (
+              <h2>Quên mật khẩu</h2>
+              {msg && (
                 <Alert
-                  severity="error"
+                  severity={`${
+                    error ? 'error' : 'success'
+                  }`}
                   sx={{ marginTop: 1 }}
                 >
-                  {errorMsg}
+                  {msg}
                 </Alert>
               )}
 
@@ -118,26 +103,12 @@ const Login = () => {
                   }
                 />
               </Box>
-              <Box sx={{ marginTop: 3 }}>
-                <InputText
-                  label="Password"
-                  type="password"
-                  error={errors.password?.message}
-                  {...register(
-                    'password',
-                    passwordValidation
-                  )}
-                  onChange={(e) =>
-                    setValue('password', e.target.value)
-                  }
-                />
-              </Box>
               <Button
                 variant="contained"
                 sx={{ marginTop: 3, color: 'white' }}
                 type="submit"
               >
-                Đăng nhập
+                Gửi yêu cầu
               </Button>
             </form>
             <Stack
@@ -146,7 +117,7 @@ const Login = () => {
               sx={{ marginTop: 2 }}
             >
               <Link
-                to={`/${path.admin.path}/${path.admin.children.forgotPassword}`}
+                to={`/${path.admin.path}/${path.login}`}
               >
                 <Typography
                   sx={{
@@ -156,16 +127,15 @@ const Login = () => {
                     }
                   }}
                 >
-                  Quên mật khẩu?
+                  Đăng nhập
                 </Typography>
               </Link>
             </Stack>
           </Box>
         </Stack>
       </Container>
-      <Options />
     </>
   )
 }
 
-export default Login
+export default ForgotPassword

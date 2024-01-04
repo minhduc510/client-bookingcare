@@ -16,9 +16,12 @@ import {
 import MENU_ADMIN from '@/utils/constant'
 import DrawerHeader from '@/helpers/drawerHeader'
 import ReactLogo from '@/assets/svg/logo.svg?react'
+import { useAppDispatch } from '@/redux/hooks'
+import { logoutAdded } from '@/redux/slices/auth'
 import {
   FaArrowAltCircleLeft,
-  FaArrowAltCircleRight
+  FaArrowAltCircleRight,
+  RiLogoutBoxFill
 } from '@/icons'
 
 interface SideBarProps {
@@ -32,6 +35,8 @@ const SideBar = ({
   setOpen,
   drawerWidth
 }: SideBarProps) => {
+  const dispatch = useAppDispatch()
+
   const theme = useTheme()
 
   const handleDrawerClose = () => {
@@ -102,6 +107,20 @@ const SideBar = ({
           </ListItem>
         )
       )}
+      <ListItem
+        disablePadding
+        onClick={() => dispatch(logoutAdded())}
+      >
+        <ListItemButton>
+          <ListItemIcon>
+            <RiLogoutBoxFill size={19} />
+          </ListItemIcon>
+          <ListItemText
+            primary="Đăng xuất"
+            sx={{ marginTop: 1 }}
+          />
+        </ListItemButton>
+      </ListItem>
     </Drawer>
   )
 }

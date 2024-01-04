@@ -154,8 +154,8 @@ const Header = ({ open, setOpen }: HeaderProps) => {
               }}
             >
               <Avatar
-                alt="Remy Sharp"
-                src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/237134810_124975096521523_167746239805698786_n.jpg?stp=dst-jpg_s1080x2048&_nc_cat=108&ccb=1-7&_nc_sid=bd92f5&_nc_ohc=9thuxeQNcHQAX_Y8RL4&_nc_ht=scontent.fhan15-1.fna&oh=00_AfA3GQIcYiD7qWnjnU3vx8f-bUSC-ftCUTB2QAATijA3CA&oe=65926E29"
+                alt="Minh Đức"
+                src="https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/bltcf76ab38307aef41/647052e443b091a2e2d91d10/GettyImages-1478795049_(1).jpg?auto=webp&format=pjpg&width=3840&quality=60"
               />
             </Fab>
           </Tooltip>

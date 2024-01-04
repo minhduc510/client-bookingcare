@@ -3,7 +3,6 @@ import {
   FaInfo,
   IoMdHome,
   FaUserDoctor,
-  RiLogoutBoxFill,
   IoSettingsSharp,
   TfiLayoutSliderAlt
 } from '@/icons'
@@ -47,12 +46,6 @@ const MENU_ADMIN = {
       name: 'Cài đặt',
       icon: IoSettingsSharp,
       sizeIcon: 16
-    },
-    {
-      link: '/logout',
-      name: 'Đăng xuất',
-      icon: RiLogoutBoxFill,
-      sizeIcon: 19
     }
   ]
 }
