@@ -1,52 +1,45 @@
-import { Fragment, useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import useSWR from 'swr'
 import {
-  DndContext,
-  DragEndEvent,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  DragOverlay,
-  DragStartEvent,
-  defaultDropAnimationSideEffects
-} from '@dnd-kit/core'
-import { Box, Button } from '@mui/material'
-
-import ModelAdd from './ModelAdd'
-import ItemSlide from './ItemSlide'
-import { IoPersonAdd } from '@/icons'
+  Fragment,
+  useState,
+  useEffect,
+  useCallback
+} from 'react'
 import {
   arrayMove,
   SortableContext,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable'
+import {
+  useSensor,
+  DndContext,
+  useSensors,
+  TouchSensor,
+  DragOverlay,
+  MouseSensor,
+  DragEndEvent,
+  DragStartEvent,
+  defaultDropAnimationSideEffects
+} from '@dnd-kit/core'
+import { Box, Button } from '@mui/material'
 
-const data = [
+import swal from '@/utils/swal'
+import ModelAdd from './ModelAdd'
+import ItemSlide from './ItemSlide'
+import Loading from '@/components/Loading'
+import { IoPersonAdd } from '@/icons'
+import { ISliceProps } from '@/interface'
+import { apiHasToken, linkApi } from '@/api'
+
+const dataFake = [
   {
     id: 1,
-    image:
-      'https://cdn.bookingcare.vn/fo/w1920/2023/11/02/134537-group-12314.png',
-    title: 'suwsc khoar'
-  },
-  {
-    id: 2,
-    image:
-      'https://cdn.bookingcare.vn/fo/w1920/2023/09/07/141422-144204-dat-lich-kham-bookingcare-pharmacity.jpg',
-    title: 'suwsc khoar'
-  },
-  {
-    id: 3,
-    image:
-      'https://cdn.bookingcare.vn/fo/w1920/2023/11/02/103728-med247.png',
-    title: 'suwsc khoar'
+    image: '',
+    title: '',
+    order: 0
   }
 ]
-
-interface ISliceProps {
-  id: number
-  image: string
-  title: string
-}
 
 const styleDragOverlay = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -61,12 +54,17 @@ const styleDragOverlay = {
 const Slider = () => {
   const [openModelAdd, setOpenModelAdd] = useState(false)
 
-  const [listSlice, setListSlice] = useState(data)
+  const [listSlice, setListSlice] =
+    useState<ISliceProps[]>(dataFake)
   const [sliceActiveIndex, setStyleActiveIndex] = useState<
     number | null
   >(null)
   const [sliceActive, setSliceActive] =
     useState<ISliceProps | null>(null)
+
+  const handleOpenModelAdd = useCallback(() => {
+    setOpenModelAdd(false)
+  }, [])
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -114,6 +112,40 @@ const Slider = () => {
     }
   }
 
+  const handleSaveOrder = async () => {
+    const dataOrder = listSlice.map((slide) => slide.id)
+    const { error } = await apiHasToken.orderSlide(
+      dataOrder
+    )
+    if (!error) {
+      swal
+        .success('Cập nhật thứ tự slide thành công')
+        .then(() => {
+          mutate()
+        })
+    } else {
+      swal.error('Cập nhật thứ tự slide không thành công')
+    }
+  }
+
+  const { data, isLoading, mutate } = useSWR(
+    linkApi.getAllSlide,
+    apiHasToken.getAllSlide(),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
+    }
+  )
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!data.error) {
+        setListSlice(data.data)
+      }
+    }
+  }, [isLoading, JSON.stringify(data?.data)])
+  console.log(data)
   return (
     <>
       <Box
@@ -131,56 +163,61 @@ const Slider = () => {
           Thêm
         </Button>
       </Box>
-      <DndContext
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-        sensors={sensors}
-      >
-        <Box
-          sx={{
-            overflowX: {
-              xs: 'auto',
-              md: 'hidden'
-            },
-            marginTop: 2,
-            borderRadius: 2,
-            p: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            maxWidth: {
-              xs: 'calc(100vw - 15px)',
-              md: '100%'
-            },
-            bgcolor: 'primary.main',
-            boxShadow: (theme) =>
-              `${
-                theme.palette.mode === 'dark'
-                  ? theme.boxShadowDark
-                  : theme.boxShadowLight
-              }`
-          }}
+      {isLoading ? (
+        <Loading open={isLoading} />
+      ) : (
+        <DndContext
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+          sensors={sensors}
         >
-          <SortableContext
-            items={listSlice.map((item) => item.id)}
-            strategy={verticalListSortingStrategy}
+          <Box
+            sx={{
+              overflowX: {
+                xs: 'auto',
+                md: 'hidden'
+              },
+              marginTop: 2,
+              borderRadius: 2,
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              maxWidth: {
+                xs: 'calc(100vw - 15px)',
+                md: '100%'
+              },
+              bgcolor: 'primary.main',
+              boxShadow: (theme) =>
+                `${
+                  theme.palette.mode === 'dark'
+                    ? theme.boxShadowDark
+                    : theme.boxShadowLight
+                }`
+            }}
           >
-            {listSlice.map((item, index) => (
-              <Fragment key={index}>
-                <ItemSlide data={item} index={index} />
-              </Fragment>
-            ))}
-          </SortableContext>
-        </Box>
-        <DragOverlay dropAnimation={styleDragOverlay}>
-          {sliceActive && (
-            <ItemSlide
-              data={sliceActive}
-              index={sliceActiveIndex}
-            />
-          )}
-        </DragOverlay>
-      </DndContext>
+            <SortableContext
+              items={listSlice?.map((item) => item.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {listSlice?.map((item, index) => (
+                <Fragment key={index}>
+                  <ItemSlide data={item} index={index} />
+                </Fragment>
+              ))}
+            </SortableContext>
+          </Box>
+          <DragOverlay dropAnimation={styleDragOverlay}>
+            {sliceActive && (
+              <ItemSlide
+                data={sliceActive}
+                index={sliceActiveIndex}
+              />
+            )}
+          </DragOverlay>
+        </DndContext>
+      )}
+
       <Box
         sx={{
           display: 'flex',
@@ -191,16 +228,19 @@ const Slider = () => {
         <Button
           variant="contained"
           sx={{ color: 'white', bgcolor: 'green' }}
+          onClick={handleSaveOrder}
         >
           Lưu
         </Button>
       </Box>
 
       {/* Model */}
-      <ModelAdd
-        open={openModelAdd}
-        setOpen={setOpenModelAdd}
-      />
+      {openModelAdd && (
+        <ModelAdd
+          open={openModelAdd}
+          setOpen={handleOpenModelAdd}
+        />
+      )}
     </>
   )
 }

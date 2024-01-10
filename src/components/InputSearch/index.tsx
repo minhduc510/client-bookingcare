@@ -1,8 +1,14 @@
+/* eslint-disable no-unused-vars */
 import { Toolbar } from '@mui/material'
 import { styled, alpha } from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
 
 import { IoSearch } from '@/icons'
+
+interface IProps {
+  value: string
+  onChange: (value: string) => void
+}
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -52,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }))
 
-const InputSearch = () => {
+const InputSearch = ({ value, onChange }: IProps) => {
   return (
     <Toolbar sx={{ px: '0 !important' }}>
       <Search>
@@ -60,6 +66,8 @@ const InputSearch = () => {
           <IoSearch />
         </SearchIconWrapper>
         <StyledInputBase
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           placeholder="Search…"
           inputProps={{ 'aria-label': 'search' }}
         />

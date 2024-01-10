@@ -11,7 +11,7 @@ const Loading = ({ open }: IProps) => {
       sx={{
         color: '#fff',
         backdropFilter: 'blur(2px)',
-        zIndex: (theme) => theme.zIndex.drawer + 1
+        zIndex: 9999
       }}
       open={open}
     >

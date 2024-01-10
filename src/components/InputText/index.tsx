@@ -44,7 +44,7 @@ const InputText = forwardRef(
         size={size}
         sx={{
           width: '100%',
-          maxWidth: '500px'
+          maxWidth: '600px'
         }}
         onChange={onChange}
       />

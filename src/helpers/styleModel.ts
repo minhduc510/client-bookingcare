@@ -7,7 +7,7 @@ const styleModel = {
   transform: 'translate(-50%, -50%)',
   width: {
     xs: 360,
-    sm: 500
+    sm: 600
   },
   bgcolor: 'background.paper',
   boxShadow: (theme: Theme) =>
