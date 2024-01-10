@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import { useSortable } from '@dnd-kit/sortable'
+import { mutate } from 'swr'
 import { CSS } from '@dnd-kit/utilities'
+import { useCallback, useState } from 'react'
+import { useSortable } from '@dnd-kit/sortable'
 import { Box, Tooltip, Typography } from '@mui/material'
+
+import swal from '@/utils/swal'
+import ModelEdit from '../ModelEdit'
+import Image from '@/components/Image'
 
 import {
   FaPen,
   GiHamburgerMenu,
   RiDeleteBin4Fill
 } from '@/icons'
-import swal from '@/utils/swal'
-import Image from '@/components/Image'
-import ModelEdit from '../ModelEdit'
+import { ISliceProps } from '@/interface'
+import { apiHasToken, linkApi } from '@/api'
 
 interface IProps {
-  data: {
-    id: number
-    image: string
-    title: string
-  }
+  data: ISliceProps
   index: number | null
 }
 
@@ -49,8 +49,27 @@ const ItemSlide = ({ data, index }: IProps) => {
 
   const [openModelEdit, setOpenModelEdit] = useState(false)
 
+  const handleOpenModelEdit = useCallback(() => {
+    setOpenModelEdit(false)
+  }, [])
+
   const handleDeleteSlider = () => {
-    swal.confirm('Bạn có chắc chắn muốn xóa?')
+    swal
+      .confirm('Bạn có chắc chắn muốn xóa?')
+      .then(async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          const { error } = await apiHasToken.deleteSlide(
+            data.id
+          )
+          if (!error) {
+            swal
+              .success('Xóa user thành công!')
+              .then(() => {
+                mutate(linkApi.getAllSlide)
+              })
+          }
+        }
+      })
   }
   return (
     <>
@@ -60,7 +79,7 @@ const ItemSlide = ({ data, index }: IProps) => {
         {...attributes}
         sx={{
           width: {
-            xs: '650px',
+            xs: '850px',
             sm: '100%'
           }
         }}
@@ -110,7 +129,15 @@ const ItemSlide = ({ data, index }: IProps) => {
               objectFit="contain"
             />
           </Box>
-          <Typography>{data.title}</Typography>
+          <Typography
+            sx={{
+              width: '400px',
+              maxWidth: '400px',
+              textAlign: 'center'
+            }}
+          >
+            {data.title}
+          </Typography>
           <Box
             sx={{
               display: 'flex',
@@ -166,10 +193,14 @@ const ItemSlide = ({ data, index }: IProps) => {
         </Box>
       </Box>
       {/* Model */}
-      <ModelEdit
-        open={openModelEdit}
-        setOpen={setOpenModelEdit}
-      />
+
+      {openModelEdit && (
+        <ModelEdit
+          data={data}
+          open={openModelEdit}
+          setOpen={handleOpenModelEdit}
+        />
+      )}
     </>
   )
 }

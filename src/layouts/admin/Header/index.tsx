@@ -14,13 +14,16 @@ import {
   useColorScheme
 } from '@mui/material'
 
-import { Mode } from '@/interface'
+import { Mode, UserProps } from '@/interface'
+import { stateUserSlice } from '@/redux/slices/user'
+import { useAppSelector } from '@/redux/hooks'
 import {
   FaBell,
   IoSunny,
   BsFillMoonStarsFill,
   FaArrowAltCircleRight
 } from '@/icons'
+import { useEffect, useState } from 'react'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
@@ -56,6 +59,10 @@ const AppBar = styled(MuiAppBar, {
 }))
 
 const Header = ({ open, setOpen }: HeaderProps) => {
+  const [user, setUser] = useState<UserProps | null>(null)
+
+  const userData = useAppSelector(stateUserSlice)
+
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -66,6 +73,13 @@ const Header = ({ open, setOpen }: HeaderProps) => {
       mode === 'dark' ? 'light' : ('dark' as Mode)
     setMode(modeChange)
   }
+
+  useEffect(() => {
+    if (Object.keys(userData).length) {
+      setUser(userData)
+    }
+  }, [JSON.stringify(userData)])
+
   return (
     <AppBar position="fixed" open={open}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -142,7 +156,7 @@ const Header = ({ open, setOpen }: HeaderProps) => {
               )}
             </Fab>
           </Tooltip>
-          <Tooltip title="Minh Đức">
+          <Tooltip title={user?.fullname}>
             <Fab
               size="small"
               aria-label="add"
@@ -154,8 +168,8 @@ const Header = ({ open, setOpen }: HeaderProps) => {
               }}
             >
               <Avatar
-                alt="Minh Đức"
-                src="https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/bltcf76ab38307aef41/647052e443b091a2e2d91d10/GettyImages-1478795049_(1).jpg?auto=webp&format=pjpg&width=3840&quality=60"
+                alt={user?.fullname}
+                src={user?.avatar}
               />
             </Fab>
           </Tooltip>

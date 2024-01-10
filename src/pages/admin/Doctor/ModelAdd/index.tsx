@@ -28,28 +28,30 @@ import {
   roleValidation,
   emailValidation,
   phoneValidation,
-  addressValidation
+  addressValidation,
+  passwordValidation
 } from '@/validation'
 import Loading from '@/components/Loading'
 import styleModel from '@/helpers/styleModel'
 import InputText from '@/components/InputText'
-import { Role, UserProps } from '@/interface'
-import { apiHasToken } from '@/api'
+import { Role } from '@/interface'
+import { apiHasToken, linkApi } from '@/api'
 import swal from '@/utils/swal'
+import { KeyedMutator } from 'swr'
 
 const names = ['Doctor', 'Client']
 
 interface IProps {
-  user: UserProps
+  mutate: KeyedMutator<unknown>
   open: boolean
   closeModel: () => void
-  resetSearchAndKeyword: () => void
 }
 
 type Gender = 0 | 1
 
 type Inputs = {
   email: string
+  password: string
   firstName: string
   lastName: string
   address: string
@@ -57,27 +59,22 @@ type Inputs = {
   roles: Role[]
 }
 
-const ModelUpdate = ({
-  user,
-  open,
-  closeModel,
-  resetSearchAndKeyword
-}: IProps) => {
+const ModelAdd = ({ mutate, open, closeModel }: IProps) => {
   const [loading, setLoading] = useState(false)
-  const [gender, setGender] = useState(Number(user.gender))
+  const [gender, setGender] = useState(0)
 
-  const [roleName, setRoleName] = useState<Role[]>(
-    user.roles as Role[]
-  )
+  const [personName, setPersonName] = useState<Role[]>([
+    'Client'
+  ])
 
   const handleChangeRole = (
-    event: SelectChangeEvent<typeof roleName>
+    event: SelectChangeEvent<typeof personName>
   ) => {
     const {
       target: { value }
     } = event
     setError('roles', '' as ErrorOption)
-    setRoleName(value as Role[])
+    setPersonName(value as Role[])
   }
 
   const handleChangeGender = (
@@ -98,68 +95,31 @@ const ModelUpdate = ({
     formState: { errors }
   } = useForm({
     defaultValues: {
-      email: user.email,
-      phone: user.phone,
-      address: user.address,
-      lastName: user.lastName,
-      firstName: user.firstName,
-      roles: roleName
-    } as Inputs
+      email: '',
+      phone: '',
+      password: '',
+      address: '',
+      lastName: '',
+      firstName: '',
+      roles: personName
+    }
   })
 
-  const onSubmit: SubmitHandler<Inputs> = async ({
-    email,
-    phone,
-    address,
-    lastName,
-    firstName,
-    roles
-  }) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setLoading(true)
-    const dataBody: UserProps = {}
-    if (firstName.trim() !== user.firstName) {
-      dataBody.firstName = firstName
-    }
-    if (lastName.trim() !== user.lastName) {
-      dataBody.lastName = lastName
-    }
-    if (address.trim() !== user.address) {
-      dataBody.address = address
-    }
-    if (phone.trim() !== user.phone) {
-      dataBody.phone = phone
-    }
-    if (email.trim() !== user.email) {
-      dataBody.email = email
-    }
-    if (
-      JSON.stringify(roles) !== JSON.stringify(user.roles)
-    ) {
-      dataBody.roles = roles
-    }
-    if (gender !== Number(user.gender)) {
-      dataBody.gender = gender
-    }
-    if (Object.keys(dataBody).length > 0) {
-      const { error, message } =
-        await apiHasToken.updateUser(
-          Number(user.id),
-          dataBody
-        )
-      if (!error) {
-        swal
-          .success('Cập nhật user thành công ^^')
-          .then(() => {
-            closeModel()
-            resetSearchAndKeyword()
-          })
-      } else {
-        swal.error(message)
+    const { error, message } = await apiHasToken.createUser(
+      {
+        ...data,
+        gender
       }
+    )
+    if (!error) {
+      swal.success('Tạo user thành công ^^').then(() => {
+        closeModel()
+        mutate(linkApi.getAllUserDoctors)
+      })
     } else {
-      await swal.warning(
-        'Bạn chưa thay đổi thông tin nào !'
-      )
+      swal.error(message)
     }
     setLoading(false)
   }
@@ -197,7 +157,7 @@ const ModelUpdate = ({
               variant="h6"
               component="h2"
             >
-              Cập nhật người dùng
+              Thêm người dùng
             </Typography>
             <Box
               id="transition-modal-description"
@@ -308,7 +268,7 @@ const ModelUpdate = ({
                     labelId="demo-multiple-chip-label"
                     id="demo-multiple-chip"
                     multiple
-                    value={roleName}
+                    value={personName}
                     {...register('roles', roleValidation)}
                     onChange={handleChangeRole}
                     input={
@@ -343,6 +303,24 @@ const ModelUpdate = ({
                     </FormHelperText>
                   )}
                 </FormControl>
+                <Box sx={{ marginTop: 3 }}>
+                  <InputText
+                    label={'Password'}
+                    type="password"
+                    error={errors.password?.message}
+                    {...register(
+                      'password',
+                      passwordValidation
+                    )}
+                    onChange={(e) => {
+                      setValue('password', e.target.value)
+                      setError(
+                        'password',
+                        '' as ErrorOption
+                      )
+                    }}
+                  />
+                </Box>
                 <Button
                   variant="contained"
                   sx={{
@@ -363,4 +341,4 @@ const ModelUpdate = ({
   )
 }
 
-export default ModelUpdate
+export default ModelAdd
