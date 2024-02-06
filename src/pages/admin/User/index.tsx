@@ -91,13 +91,16 @@ export default function User() {
     }, 500)
   }, [])
 
-  const handleCloseModelUpdate = useCallback(() => {
-    setOpenModelUpdate(false)
-    setTimeout(() => {
-      setUserDetail(null)
-      mutate([linkApi.getAllUserClients, querySearch])
-    }, 500)
-  }, [])
+  const handleCloseModelUpdate = useCallback(
+    (isSubmit: boolean = false) => {
+      setOpenModelUpdate(false)
+      setTimeout(() => {
+        setUserDetail(null)
+        isSubmit && mutate(querySearch)
+      }, 500)
+    },
+    []
+  )
 
   const handleChangeSearch = (value: string) => {
     setSearchValue(value)
@@ -146,7 +149,11 @@ export default function User() {
         sx={{
           textAlign: 'center',
           fontStyle: 'italic',
-          fontWeight: 600
+          fontWeight: 600,
+          fontSize: {
+            xs: '1.2rem',
+            sm: '1.5rem'
+          }
         }}
       >
         Danh sách người dùng
@@ -232,12 +239,7 @@ export default function User() {
           <Loading open={isLoading} />
         ) : (
           <>
-            {' '}
-            <TableContainer
-              sx={{
-                maxHeight: 600
-              }}
-            >
+            <TableContainer>
               <Table
                 stickyHeader
                 aria-label="sticky table"

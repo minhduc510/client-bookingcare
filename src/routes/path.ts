@@ -1,15 +1,11 @@
+import adminRoute from './admin'
+import clientRoute from './client'
+import doctorRoute from './doctor'
+
 const path = {
-  admin: {
-    path: 'admin',
-    children: {
-      dashboard: '',
-      users: 'users',
-      doctors: 'doctors',
-      sliders: 'sliders',
-      forgotPassword: 'forgot-password'
-    }
-  },
-  login: 'login'
+  admin: { ...adminRoute },
+  client: { ...clientRoute },
+  doctor: { ...doctorRoute }
 }
 
 export default path

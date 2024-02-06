@@ -3,11 +3,13 @@ import {
   Box,
   Fade,
   Modal,
-  Backdrop,
-  Typography,
+  Stack,
+  Alert,
   Avatar,
-  Alert
+  Backdrop,
+  Typography
 } from '@mui/material'
+import { FiX } from '@/icons'
 import { UserProps } from '@/interface'
 import styleModel from '@/helpers/styleModel'
 
@@ -39,6 +41,12 @@ const ModelInfo = ({ user, open, closeModel }: IProps) => {
     >
       <Fade in={open}>
         <Box sx={styleModel}>
+          <Stack
+            onClick={() => closeModel()}
+            alignItems={'flex-end'}
+          >
+            <FiX size={25} />
+          </Stack>
           <Typography
             id="transition-modal-title"
             variant="h6"
@@ -46,14 +54,14 @@ const ModelInfo = ({ user, open, closeModel }: IProps) => {
           >
             Thông tin người dùng
           </Typography>
-          <Typography
+          <Box
             id="transition-modal-description"
             sx={{ mt: 2 }}
           >
             <Avatar
               alt="Đức"
               src={user?.avatar}
-              sx={{ width: 65, height: 65, mx: 'auto' }}
+              sx={{ width: 165, height: 165, mx: 'auto' }}
             />
             <Typography
               sx={{ textAlign: 'center', marginTop: 1 }}
@@ -84,7 +92,7 @@ const ModelInfo = ({ user, open, closeModel }: IProps) => {
                 </Alert>
               )}
             </Box>
-          </Typography>
+          </Box>
         </Box>
       </Fade>
     </Modal>

@@ -198,7 +198,7 @@ const ItemSlide = ({ data, index }: IProps) => {
         <ModelEdit
           data={data}
           open={openModelEdit}
-          setOpen={handleOpenModelEdit}
+          closeModel={handleOpenModelEdit}
         />
       )}
     </>

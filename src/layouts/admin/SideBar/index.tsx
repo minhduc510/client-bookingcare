@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import {
   Box,
@@ -13,7 +13,8 @@ import {
   ListItemButton
 } from '@mui/material'
 
-import MENU_ADMIN from '@/utils/constant'
+import path from '@/routes/path'
+import { MENU_ADMIN } from '@/utils/constantMenu'
 import DrawerHeader from '@/helpers/drawerHeader'
 import ReactLogo from '@/assets/svg/logo.svg?react'
 import { useAppDispatch } from '@/redux/hooks'
@@ -36,7 +37,7 @@ const SideBar = ({
   drawerWidth
 }: SideBarProps) => {
   const dispatch = useAppDispatch()
-
+  const navigate = useNavigate()
   const theme = useTheme()
 
   const handleDrawerClose = () => {
@@ -109,7 +110,10 @@ const SideBar = ({
       )}
       <ListItem
         disablePadding
-        onClick={() => dispatch(logoutAdded())}
+        onClick={() => {
+          dispatch(logoutAdded())
+          navigate(`${path.admin.login}`)
+        }}
       >
         <ListItemButton>
           <ListItemIcon>

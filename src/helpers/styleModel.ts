@@ -5,9 +5,18 @@ const styleModel = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  overflowY: 'auto',
   width: {
-    xs: 360,
+    xs: '100%',
     sm: 600
+  },
+  height: {
+    xs: '100%',
+    sm: 'auto'
+  },
+  maxHeight: {
+    xs: '100%',
+    sm: '900px'
   },
   bgcolor: 'background.paper',
   boxShadow: (theme: Theme) =>
@@ -16,8 +25,14 @@ const styleModel = {
         ? theme.boxShadowDark
         : theme.boxShadowLight
     }`,
-  p: 4,
-  borderRadius: 2
+  p: {
+    xs: 1,
+    sm: 4
+  },
+  borderRadius: {
+    xs: 0,
+    sm: 2
+  }
 }
 
 export default styleModel

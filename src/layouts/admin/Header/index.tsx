@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { styled } from '@mui/material/styles'
 import MuiAppBar, {
   AppBarProps as MuiAppBarProps
@@ -156,7 +158,7 @@ const Header = ({ open, setOpen }: HeaderProps) => {
               )}
             </Fab>
           </Tooltip>
-          <Tooltip title={user?.fullname}>
+          <Tooltip title={user?.fullName}>
             <Fab
               size="small"
               aria-label="add"
@@ -168,7 +170,7 @@ const Header = ({ open, setOpen }: HeaderProps) => {
               }}
             >
               <Avatar
-                alt={user?.fullname}
+                alt={user?.fullName}
                 src={user?.avatar}
               />
             </Fab>

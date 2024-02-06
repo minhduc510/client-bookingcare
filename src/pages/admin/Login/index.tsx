@@ -32,7 +32,7 @@ type Inputs = {
   password: string
 }
 
-const Login = () => {
+const LoginAdmin = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [searchParams] = useSearchParams()
@@ -57,7 +57,7 @@ const Login = () => {
       error,
       message,
       data: dataRes
-    } = await apiNoToken.login(data)
+    } = await apiNoToken.login({ ...data, _type: 'Admin' })
     if (error) {
       setErrorMsg(message)
     } else {
@@ -65,7 +65,7 @@ const Login = () => {
       setErrorMsg('')
       const pathName =
         searchParams.get('continue_url') ??
-        `/${path.admin.path}`
+        `/${path.admin.home}`
       navigate(pathName)
     }
     setLoading(false)
@@ -81,12 +81,22 @@ const Login = () => {
           gap={3}
           sx={{ height: '100%' }}
         >
-          <Box sx={{ width: '300px' }}>
+          <Box
+            sx={{
+              width: {
+                xs: '250px',
+                sm: '300px'
+              }
+            }}
+          >
             <ReactLogo />
           </Box>
           <Box
             sx={{
-              width: '500px',
+              width: {
+                xs: '100%',
+                sm: '500px'
+              },
               p: 2,
               borderRadius: 1,
               boxShadow: (theme) =>
@@ -98,7 +108,7 @@ const Login = () => {
             }}
           >
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2>Đăng nhập</h2>
+              <h2>Đăng nhập (quản trị viên)</h2>
               {errorMsg && (
                 <Alert
                   severity="error"
@@ -145,9 +155,7 @@ const Login = () => {
               justifyContent="end"
               sx={{ marginTop: 2 }}
             >
-              <Link
-                to={`/${path.admin.path}/${path.admin.children.forgotPassword}`}
-              >
+              <Link to={`/${path.admin.forgotPassword}`}>
                 <Typography
                   sx={{
                     ':hover': {
@@ -168,4 +176,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default LoginAdmin

@@ -2,28 +2,38 @@ import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 declare module '@mui/material/styles' {
   interface Theme {
+    HEIGHT_HEADER_CLIENT: string
     boxShadowDark: string
     boxShadowLight: string
   }
   // allow configuration using `createTheme`
   interface ThemeOptions {
+    HEIGHT_HEADER_CLIENT: string
     boxShadowDark: string
     boxShadowLight: string
   }
 }
 
 const theme = extendTheme({
+  HEIGHT_HEADER_CLIENT: '80px',
   boxShadowDark:
     'rgba(255, 255, 255, 0.05) 0px 6px 24px 0px, rgba(255, 255, 255, 0.08) 0px 0px 0px 1px',
   boxShadowLight:
     'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
+  typography: {
+    allVariants: {
+      fontFamily: 'Montserrat',
+      textTransform: 'none',
+      fontSize: 16
+    }
+  },
   colorSchemes: {
     light: {
       palette: {
         primary: {
           light: '#edfffa',
-          main: '#5aa8b2',
-          dark: 'rgb(67 126 134)'
+          main: '#45c3d3',
+          dark: '#5aa8b2'
         }
       }
     },
@@ -44,6 +54,10 @@ const theme = extendTheme({
         a: {
           textDecoration: 'none',
           color: 'inherit'
+        },
+        ul: {
+          listStyle: 'none',
+          padding: 0
         },
         '*::-webkit-scrollbar': {
           width: '7px',
