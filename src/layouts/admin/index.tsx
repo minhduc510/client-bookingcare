@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -6,11 +7,6 @@ import Box from '@mui/material/Box'
 import Header from './Header'
 import SideBar from './SideBar'
 import DrawerHeader from '@/helpers/drawerHeader'
-import { useAppDispatch } from '@/redux/hooks'
-import { userAdded } from '@/redux/slices/user'
-import { apiHasToken } from '@/api'
-import { stateLoginSlice } from '@/redux/slices/auth'
-import { useAppSelector } from '@/redux/hooks'
 
 const drawerWidth = 240
 
@@ -36,22 +32,7 @@ const Main = styled('main', {
 }))
 
 export default function Admin() {
-  const dispatch = useAppDispatch()
   const [open, setOpen] = useState(true)
-  const { login, token } = useAppSelector(stateLoginSlice)
-
-  useEffect(() => {
-    if (login && token) {
-      const callApi = async () => {
-        const { error, user } =
-          await apiHasToken.userCurrent(token)
-        if (!error) {
-          dispatch(userAdded(user))
-        }
-      }
-      callApi()
-    }
-  }, [login, token])
 
   return (
     <Box sx={{ display: 'flex', overflow: 'hidden' }}>

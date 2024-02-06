@@ -145,7 +145,7 @@ const Slider = () => {
       }
     }
   }, [isLoading, JSON.stringify(data?.data)])
-  console.log(data)
+
   return (
     <>
       <Box
@@ -238,7 +238,7 @@ const Slider = () => {
       {openModelAdd && (
         <ModelAdd
           open={openModelAdd}
-          setOpen={handleOpenModelAdd}
+          closeModel={handleOpenModelAdd}
         />
       )}
     </>

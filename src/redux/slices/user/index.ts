@@ -4,9 +4,11 @@ import { RootState } from '@/redux'
 import { UserProps } from '@/interface'
 
 const initialState: UserProps = {
-  fullname: '',
+  id: '',
+  fullName: '',
   email: '',
   phone: '',
+  address: '',
   avatar: ''
 }
 
@@ -15,12 +17,20 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     userAdded(state, action) {
-      const { fullname, email, phone, avatar } =
-        action.payload
-      state.fullname = fullname
+      const {
+        id,
+        fullName,
+        email,
+        phone,
+        address,
+        avatar
+      } = action.payload
+      state.id = id
+      state.fullName = fullName
       state.email = email
       state.phone = phone
       state.avatar = avatar
+      state.address = address
     }
   }
 })

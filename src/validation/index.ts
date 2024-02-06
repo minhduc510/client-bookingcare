@@ -78,11 +78,16 @@ const addressValidation = {
   }
 }
 
+const requiredValidation = {
+  required: message.required
+}
+
 export {
   nameValidation,
   roleValidation,
   emailValidation,
   phoneValidation,
   addressValidation,
-  passwordValidation
+  passwordValidation,
+  requiredValidation
 }

@@ -116,9 +116,7 @@ const ForgotPassword = () => {
               justifyContent="end"
               sx={{ marginTop: 2 }}
             >
-              <Link
-                to={`/${path.admin.path}/${path.login}`}
-              >
+              <Link to={`/${path.admin.login}`}>
                 <Typography
                   sx={{
                     ':hover': {

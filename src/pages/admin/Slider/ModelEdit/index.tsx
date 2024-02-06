@@ -6,6 +6,7 @@ import {
   Box,
   Fade,
   Modal,
+  Stack,
   Button,
   Backdrop,
   Typography
@@ -19,21 +20,21 @@ import InputText from '@/components/InputText'
 import VisuallyHiddenInput from '@/helpers/VisuallyHiddenInput'
 
 import { ISliceProps } from '@/interface'
-import { FaCloudUploadAlt } from '@/icons'
+import { FaCloudUploadAlt, FiX } from '@/icons'
 import { apiHasToken, linkApi } from '@/api'
 import { addressValidation } from '@/validation'
 
 interface IProps {
   data: ISliceProps
   open: boolean
-  setOpen: () => void
+  closeModel: () => void
 }
 
 type Inputs = {
   title: string
 }
 
-const ModelEdit = ({ open, setOpen, data }: IProps) => {
+const ModelEdit = ({ open, closeModel, data }: IProps) => {
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [messageErrorFile, setMessageErrorFile] =
@@ -87,7 +88,7 @@ const ModelEdit = ({ open, setOpen, data }: IProps) => {
           .success('Cập nhật slide thành công')
           .then(() => {
             mutate(linkApi.getAllSlide)
-            setOpen()
+            closeModel()
           })
       } else {
         swal.error('Cập nhật slide không thành công')
@@ -105,7 +106,7 @@ const ModelEdit = ({ open, setOpen, data }: IProps) => {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
-        onClose={() => setOpen()}
+        onClose={() => closeModel()}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
         slotProps={{
@@ -121,6 +122,12 @@ const ModelEdit = ({ open, setOpen, data }: IProps) => {
       >
         <Fade in={open}>
           <Box sx={styleModel}>
+            <Stack
+              onClick={() => closeModel()}
+              alignItems={'flex-end'}
+            >
+              <FiX size={25} />
+            </Stack>
             <Typography
               id="transition-modal-title"
               variant="h6"

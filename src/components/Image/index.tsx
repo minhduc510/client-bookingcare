@@ -28,7 +28,7 @@ const Image: React.FC<Iprops> = ({
       src={src}
       alt={alt}
       style={Object.assign(
-        {},
+        { boxSizing: 'border-box' },
         fill
           ? {
               position: 'absolute',
