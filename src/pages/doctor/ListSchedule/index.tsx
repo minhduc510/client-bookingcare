@@ -243,7 +243,7 @@ const ListSchedule = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataBooking.length ? (
+                {dataBooking?.length ? (
                   dataBooking.map(
                     (item: BookingPatientProps) => (
                       <TableRow

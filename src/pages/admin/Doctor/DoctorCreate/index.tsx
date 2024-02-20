@@ -250,27 +250,35 @@ const DoctorCreate = () => {
     setLoading(false)
   }
 
-  useEffect(() => {
-    const callApi = async () => {
-      const { error, data } =
-        await apiNoToken.getAllSpecialist()
-      if (!error) {
-        if (data.length) {
-          setSpecialists(
-            data.map(
-              (item: ISpecialistProps) =>
-                `${item.id}-${item.name}`
-            )
-          )
-          setSpecialistsSelected(
-            `${data[0].id}-${data[0].name}`
-          )
-        }
-      }
-      setLoading(false)
+  const {
+    data: dataSpecialist,
+    isLoading: isLoadingSpecialist
+  } = useSWR(
+    linkApi.getAllSpecialist,
+    apiNoToken.getAllSpecialist(),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
     }
-    callApi()
-  }, [loading])
+  )
+
+  useEffect(() => {
+    if (dataSpecialist) {
+      if (dataSpecialist.data.length) {
+        setSpecialists(
+          dataSpecialist.data.map(
+            (item: ISpecialistProps) =>
+              `${item.id}-${item.name}`
+          )
+        )
+        setSpecialistsSelected(
+          `${dataSpecialist.data[0].id}-${dataSpecialist.data[0].name}`
+        )
+      }
+    }
+    setLoading(false)
+  }, [isLoadingSpecialist])
 
   return (
     <>

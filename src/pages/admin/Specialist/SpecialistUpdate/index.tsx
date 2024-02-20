@@ -21,13 +21,13 @@ import {
 
 import path from '@/routes/path'
 import swal from '@/utils/swal'
-import { apiHasToken, apiNoToken } from '@/api'
 import colorCode from '@/configs/color'
 import { FaCloudUploadAlt } from '@/icons'
 import { IEditorProps } from '@/interface'
 import Loading from '@/components/Loading'
 import { nameValidation } from '@/validation'
 import InputText from '@/components/InputText'
+import { apiHasToken, apiNoToken } from '@/api'
 import ImagePreview from '@/components/ImagePreview'
 import VisuallyHiddenInput from '@/helpers/VisuallyHiddenInput'
 
@@ -146,7 +146,7 @@ const SpecialistUpdate = () => {
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack
-            direction="row"
+            direction={{ xs: 'column', md: 'row' }}
             alignItems="center"
             spacing={2}
             marginY={2}
@@ -178,6 +178,7 @@ const SpecialistUpdate = () => {
                       : 'contained'
                   }`}
                   startIcon={<FaCloudUploadAlt />}
+                  sx={{ minWidth: '150px' }}
                 >
                   Upload file
                   <VisuallyHiddenInput

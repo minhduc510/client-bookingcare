@@ -147,7 +147,7 @@ const LoginDoctor = () => {
               </Box>
               <Box sx={{ marginTop: 3 }}>
                 <InputText
-                  label="Password"
+                  label="Mật khẩu"
                   type="password"
                   error={errors.password?.message}
                   {...register(

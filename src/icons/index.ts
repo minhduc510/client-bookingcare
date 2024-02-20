@@ -1,11 +1,14 @@
 import { FiX } from 'react-icons/fi'
 import { VscError } from 'react-icons/vsc'
 import { GoCheckbox } from 'react-icons/go'
-import { AiOutlineSchedule } from 'react-icons/ai'
 import { TfiLayoutSliderAlt } from 'react-icons/tfi'
 import { BsFillMoonStarsFill } from 'react-icons/bs'
 import { LiaHospitalAltSolid } from 'react-icons/lia'
 import { MdPhone, MdOutlineEmail } from 'react-icons/md'
+import {
+  AiFillSchedule,
+  AiOutlineSchedule
+} from 'react-icons/ai'
 import {
   TiArrowSortedUp,
   TiArrowSortedDown
@@ -66,6 +69,7 @@ export {
   IoPersonAdd,
   GiDoctorFace,
   FaUserDoctor,
+  AiFillSchedule,
   MdOutlineEmail,
   IoIosArrowBack,
   RiLogoutBoxFill,

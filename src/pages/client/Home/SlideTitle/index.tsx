@@ -1,8 +1,11 @@
+import useSWR from 'swr'
 import Slider from 'react-slick'
 import { makeStyles } from '@mui/styles'
 import { Box, Theme, Container } from '@mui/material'
 
 import Image from '@/components/Image'
+import { ISlideProps } from '@/interface'
+import { apiNoToken, linkApi } from '@/api'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,8 +53,21 @@ const SlideTitle = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
+    autoplay: true,
+    autoplaySpeed: 2000,
     dotsClass: `slick-dots ${classes.dots}`
   }
+
+  const { data, isLoading } = useSWR(
+    linkApi.getAllSlide,
+    apiNoToken.getAllSlide(),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
+    }
+  )
+
   return (
     <Box
       sx={{
@@ -91,62 +107,29 @@ const SlideTitle = () => {
           }
         }}
       >
-        <Slider {...settings}>
-          <Box
-            sx={{
-              position: 'relative',
-              height: '100%',
-              width: '100%',
-              borderRadius: { xs: 3, sm: 5 },
-              overflow: 'hidden'
-            }}
-          >
-            <Image
-              src={
-                'https://cdn.bookingcare.vn/fo/w1920/2023/11/02/134537-group-12314.png'
-              }
-              alt={''}
-              objectFit="cover"
-              fill
-            />
-          </Box>
-          <Box
-            sx={{
-              position: 'relative',
-              height: '100%',
-              width: '100%',
-              borderRadius: { xs: 3, sm: 5 },
-              overflow: 'hidden'
-            }}
-          >
-            <Image
-              src={
-                'https://cdn.bookingcare.vn/fo/w1920/2023/11/02/134537-group-12314.png'
-              }
-              alt={''}
-              objectFit="cover"
-              fill
-            />
-          </Box>
-          <Box
-            sx={{
-              position: 'relative',
-              height: '100%',
-              width: '100%',
-              borderRadius: { xs: 3, sm: 5 },
-              overflow: 'hidden'
-            }}
-          >
-            <Image
-              src={
-                'https://cdn.bookingcare.vn/fo/w1920/2023/11/02/134537-group-12314.png'
-              }
-              alt={''}
-              objectFit="cover"
-              fill
-            />
-          </Box>
-        </Slider>
+        {!isLoading && (
+          <Slider {...settings}>
+            {data?.data.map((item: ISlideProps) => (
+              <Box
+                key={item.id}
+                sx={{
+                  position: 'relative',
+                  height: '100%',
+                  width: '100%',
+                  borderRadius: { xs: 3, sm: 5 },
+                  overflow: 'hidden'
+                }}
+              >
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  objectFit="cover"
+                  fill
+                />
+              </Box>
+            ))}
+          </Slider>
+        )}
       </Container>
     </Box>
   )

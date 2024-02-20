@@ -179,7 +179,7 @@ const Booking = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data && data.data.length ? (
+                  {data && data.data?.length ? (
                     data.data.map(
                       (item: BookingClientProps) => (
                         <TableRow

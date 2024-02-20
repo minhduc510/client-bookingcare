@@ -1,6 +1,7 @@
 export type Gender = 0 | 1
 export type Mode = 'dark' | 'light' | 'system'
 export type Role = 'Client' | 'Doctor' | 'Admin'
+export type SlideGeneral = 'Specialist' | 'Clinic'
 
 export interface LoginProps {
   email: string
@@ -30,6 +31,7 @@ export interface UserProps {
   address?: string
   gender?: number
   status?: number
+  typeLogin?: number
   roles?: Role[]
   outstanding?: boolean
   positions?: PositionProps[]
@@ -69,6 +71,7 @@ export interface DoctorOutstandingProps {
   phone?: string
   avatar?: string
   address?: string
+  specialist?: string
   positions?: string[]
 }
 
@@ -112,21 +115,32 @@ export interface BookingBodyProps {
   reason: string
 }
 
+export interface SpecialistProps {
+  id: number
+  html?: string
+  image: string
+  name: string
+  text: string
+}
+
+export interface InfoDoctorProps {
+  fullName?: string
+  avatar?: string
+  nameClinic: string
+  addressClinic: string
+  specialist: string
+  priceFrom: number
+  priceTo: number
+  description: string
+  positions: string[]
+}
+
 export interface BookingClientProps {
   id: number
   reason: string
   status: -1 | 0 | 1
   time: string
-  doctor: {
-    fullName: string
-    avatar: string
-    nameClinic: string
-    addressClinic: string
-    priceFrom: number
-    priceTo: number
-    description: string
-    positions: string[]
-  }
+  doctor: InfoDoctorProps
 }
 
 export interface BookingPatientProps {
@@ -149,8 +163,35 @@ export interface IEditorProps {
   text: string
 }
 
+export interface ISlideProps {
+  id: number
+  image: string
+  order: number
+  title: string
+}
+
 export interface ISpecialistProps extends IEditorProps {
   id: number
   name: string
   image: string
+}
+
+export interface DoctorProps {
+  id: string
+  fullName: string
+  nameClinic: string
+  addressClinic: string
+  description: string
+  address: string
+  avatar: string
+  html: string
+  priceFrom: number
+  priceTo: number
+  positions: PositionProps[]
+  schedule_day: ScheduleDayProps[]
+}
+
+export interface ListActiveProps {
+  id: number
+  checked: 0 | 1
 }

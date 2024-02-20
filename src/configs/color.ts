@@ -9,8 +9,15 @@ const colorCode = {
   grey800: '#424242',
   grey900: '#212121',
 
-  // GREY
+  // LIGHT BLUE
   lightBlue400: '#29b6f6',
+
+  // GREEN
+  green600: '#43a047',
+  green900: '#1b5e20',
+
+  // YELLOW
+  yellow600: '#fdd835',
 
   // RED
   red600: '#e53935',

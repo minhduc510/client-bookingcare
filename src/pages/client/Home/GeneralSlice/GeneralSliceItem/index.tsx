@@ -1,10 +1,32 @@
-import colorCode from '@/configs/color'
-import { Box, Typography } from '@mui/material'
-import Image from '@/components/Image'
+/* eslint-disable indent */
+import { Box, Stack, Typography } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
-const GeneralSliceItem = () => {
+import path from '@/routes/path'
+import Image from '@/components/Image'
+import colorCode from '@/configs/color'
+import { SlideGeneral, SpecialistProps } from '@/interface'
+import swal from '@/utils/swal'
+
+interface IProps {
+  data: SpecialistProps
+  type: SlideGeneral
+}
+
+const GeneralSliceItem = ({ data, type }: IProps) => {
+  const navigate = useNavigate()
   return (
     <Box
+      onClick={() => {
+        type === 'Specialist'
+          ? navigate(
+              `/${path.client.specialist.replace(
+                ':id',
+                String(data.id)
+              )}`
+            )
+          : swal.warning('Trang này chưa hoàn thiện.')
+      }}
       sx={{
         border: `1px solid ${colorCode.grey300}`,
         borderRadius: 3,
@@ -29,31 +51,35 @@ const GeneralSliceItem = () => {
         }}
       >
         <Image
-          src={
-            'https://cdn.bookingcare.vn/fo/w640/2023/12/26/101739-than-kinh.png'
-          }
-          alt={''}
+          src={data.image}
+          alt={data.name}
           fill
-          objectFit="cover"
+          objectFit="contain"
         />
       </Box>
-      <Typography
-        sx={{
-          fontWeight: 600,
-          fontSize: {
-            xs: '0.9rem',
-            sm: '1.2rem'
-          },
-          textAlign: 'center',
-          marginTop: {
-            xs: 0,
-            sm: 2
-          },
-          p: { xs: 0.8, sm: 0 }
-        }}
+      <Stack
+        justifyContent="center"
+        sx={{ height: '100px' }}
       >
-        Dịch vụ toàn diện
-      </Typography>
+        <Typography
+          sx={{
+            fontWeight: 600,
+
+            fontSize: {
+              xs: '0.9rem',
+              sm: '1.2rem'
+            },
+            textAlign: 'center',
+            marginTop: {
+              xs: 0,
+              sm: 2
+            },
+            p: { xs: 0.8, sm: 0 }
+          }}
+        >
+          {data.name}
+        </Typography>
+      </Stack>
     </Box>
   )
 }

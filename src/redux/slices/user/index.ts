@@ -6,10 +6,14 @@ import { UserProps } from '@/interface'
 const initialState: UserProps = {
   id: '',
   fullName: '',
+  firstName: '',
+  lastName: '',
   email: '',
   phone: '',
   address: '',
-  avatar: ''
+  avatar: '',
+  typeLogin: 0,
+  gender: 0
 }
 
 const userSlice = createSlice({
@@ -20,22 +24,33 @@ const userSlice = createSlice({
       const {
         id,
         fullName,
+        firstName,
+        lastName,
+        gender,
         email,
         phone,
         address,
-        avatar
+        avatar,
+        typeLogin
       } = action.payload
       state.id = id
       state.fullName = fullName
+      state.firstName = firstName
+      state.lastName = lastName
+      state.gender = gender
       state.email = email
       state.phone = phone
       state.avatar = avatar
       state.address = address
+      state.typeLogin = typeLogin
+    },
+    userUpdated(state, action) {
+      return (state = { ...state, ...action.payload })
     }
   }
 })
 
-export const { userAdded } = userSlice.actions
+export const { userAdded, userUpdated } = userSlice.actions
 export const stateUserSlice = (state: RootState) =>
   state.user
 export default userSlice.reducer

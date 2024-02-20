@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Grid,
@@ -5,6 +6,7 @@ import {
   Button,
   Typography
 } from '@mui/material'
+import useSWR from 'swr'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
@@ -13,7 +15,7 @@ import path from '@/routes/path'
 import Image from '@/components/Image'
 import Loading from '@/components/Loading'
 import { ISpecialistProps } from '@/interface'
-import { apiHasToken, apiNoToken } from '@/api'
+import { apiHasToken, apiNoToken, linkApi } from '@/api'
 
 const Specialist = () => {
   const [loading, setLoading] = useState(true)
@@ -30,7 +32,9 @@ const Specialist = () => {
           const { error, message } =
             await apiHasToken.deleteSpecialist(id)
           if (!error) {
-            swal.success('Đã xóa thành công')
+            swal.success('Đã xóa thành công').then(() => {
+              mutate()
+            })
           } else {
             swal.error(message)
           }
@@ -39,17 +43,30 @@ const Specialist = () => {
       })
   }
 
-  useEffect(() => {
-    const callApi = async () => {
-      const { error, data } =
-        await apiNoToken.getAllSpecialist()
-      if (!error) {
-        setSpecialists(data)
-      }
-      setLoading(false)
+  const {
+    data: dataSpecialist,
+    isLoading,
+    mutate
+  } = useSWR(
+    linkApi.getAllSpecialist,
+    apiNoToken.getAllSpecialist(),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
     }
-    callApi()
-  }, [loading])
+  )
+
+  useEffect(() => {
+    mutate()
+  }, [])
+
+  useEffect(() => {
+    if (dataSpecialist) {
+      setSpecialists(dataSpecialist.data)
+    }
+    setLoading(false)
+  }, [isLoading, JSON.stringify(dataSpecialist?.data)])
 
   return (
     <Box>
@@ -68,11 +85,17 @@ const Specialist = () => {
       </Stack>
       {loading ? (
         <Loading open={loading} />
-      ) : specialists.length > 0 ? (
+      ) : specialists?.length > 0 ? (
         <>
           <Grid container spacing={3} marginY={0}>
             {specialists.map((item, index) => (
-              <Grid item xs={4} key={item.id}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={item.id}
+              >
                 <Box
                   padding={2}
                   sx={{
@@ -159,7 +182,7 @@ const Specialist = () => {
             textAlign: 'center'
           }}
         >
-          Không có chuyên khóa nào!
+          Không có chuyên khoa nào!
         </Typography>
       )}
     </Box>

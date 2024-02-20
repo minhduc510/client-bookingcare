@@ -7,7 +7,6 @@ import MuiAppBar, {
 import {
   Box,
   Fab,
-  Badge,
   Avatar,
   Tooltip,
   Toolbar,
@@ -20,7 +19,6 @@ import { Mode, UserProps } from '@/interface'
 import { stateUserSlice } from '@/redux/slices/user'
 import { useAppSelector } from '@/redux/hooks'
 import {
-  FaBell,
   IoSunny,
   BsFillMoonStarsFill,
   FaArrowAltCircleRight
@@ -117,27 +115,6 @@ const Header = ({ open, setOpen }: HeaderProps) => {
             gap: 2
           }}
         >
-          <Tooltip title="Thông báo">
-            <Fab
-              size="small"
-              aria-label="add"
-              sx={{
-                bgcolor: 'transparent',
-                '&:hover': {
-                  bgcolor: 'transparent'
-                }
-              }}
-            >
-              <Badge
-                badgeContent={4}
-                color="error"
-                sx={{ color: 'white' }}
-              >
-                <FaBell size={20} />
-              </Badge>
-            </Fab>
-          </Tooltip>
-
           <Tooltip title="Theme">
             <Fab
               size="small"

@@ -88,7 +88,7 @@ const DoctorSliceItem = ({ user }: IProps) => {
             textAlign: 'center'
           }}
         >
-          Sức khỏe tâm thần,Tư vấn, trị liệu Tâm lý
+          Chuyên khoa: {user.specialist}
         </Typography>
       </Box>
     </Link>

@@ -39,6 +39,22 @@ const LoginClient = () => {
   const [errorMsg, setErrorMsg] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const handleLoginGoogle = () => {
+    window.open(
+      `${import.meta.env.VITE_URL_SERVER}/api/auth/google`,
+      '_self'
+    )
+  }
+
+  const handleLoginFacebook = () => {
+    window.open(
+      `${
+        import.meta.env.VITE_URL_SERVER
+      }/api/auth/facebook`,
+      '_self'
+    )
+  }
+
   const {
     register,
     handleSubmit,
@@ -151,6 +167,34 @@ const LoginClient = () => {
             Tiếp tục
           </Button>
         </form>
+        <Box sx={{ marginY: 2 }}>
+          <Typography textAlign="center">
+            Hoặc đăng nhập bằng:
+          </Typography>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={2}
+            marginTop={1}
+          >
+            <Button
+              variant="contained"
+              color="info"
+              sx={{ color: 'white' }}
+              onClick={handleLoginFacebook}
+            >
+              Facebook
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ color: 'white' }}
+              onClick={handleLoginGoogle}
+            >
+              Google
+            </Button>
+          </Stack>
+        </Box>
         <Stack
           direction={{
             xs: 'column',
