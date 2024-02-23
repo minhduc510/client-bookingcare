@@ -95,17 +95,19 @@ const SideBar = ({
       <Divider />
       {MENU_ADMIN.personal.map(
         ({ link, icon: Icon, name, sizeIcon }) => (
-          <ListItem key={link} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Icon size={sizeIcon} />
-              </ListItemIcon>
-              <ListItemText
-                primary={name}
-                sx={{ marginTop: 1 }}
-              />
-            </ListItemButton>
-          </ListItem>
+          <Link to={link} key={link}>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Icon size={sizeIcon} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={name}
+                  sx={{ marginTop: 1 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         )
       )}
       <ListItem

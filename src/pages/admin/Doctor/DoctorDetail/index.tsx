@@ -140,28 +140,52 @@ const DoctorDetail = () => {
                 </Typography>
                 <Typography>
                   Chức danh:{' '}
-                  {data?.user.positions
-                    .map((item: PositionProps) => item.name)
-                    .join(', ')}
+                  {data?.user.positions.length > 0
+                    ? data?.user.positions
+                        .map(
+                          (item: PositionProps) => item.name
+                        )
+                        .join(', ')
+                    : 'Chưa cập nhật ...'}
                 </Typography>
               </Box>
               <Box>
                 <Typography>
+                  Chuyên khoa :{' '}
+                  {data?.user.doctor_info?.specialist
+                    ? data?.user.doctor_info.specialist.name
+                    : 'Chưa cập nhật...'}
+                </Typography>
+                <Typography>
                   Tên phòng khám :{' '}
-                  {data?.user.doctor_info.nameClinic}
+                  {data?.user.doctor_info?.nameClinic
+                    ? data?.user.doctor_info.nameClinic
+                    : 'Chưa cập nhật...'}
                 </Typography>
                 <Typography>
-                  Đại chỉ phòng khám:
-                  {data?.user.doctor_info.addressClinic}
+                  Đại chỉ phòng khám:{' '}
+                  {data?.user.doctor_info?.addressClinic
+                    ? data?.user.doctor_info.addressClinic
+                    : 'Chưa cập nhật...'}
                 </Typography>
                 <Typography>
-                  Giá khám:{' '}
-                  {formatCurrency(
-                    data?.user.doctor_info.priceFrom
-                  )}{' '}
-                  -{' '}
-                  {formatCurrency(
-                    data?.user.doctor_info.priceTo
+                  Giá khám:
+                  {data?.user.doctor_info?.priceFrom &&
+                  data?.user.doctor_info?.priceTo ? (
+                    formatCurrency(
+                      data?.user.doctor_info?.priceFrom
+                    ) +
+                    '-' +
+                    formatCurrency(
+                      data?.user.doctor_info?.priceTo
+                    )
+                  ) : (
+                    <Typography
+                      display={'inline-block'}
+                      marginLeft={1}
+                    >
+                      Chưa cập nhật...
+                    </Typography>
                   )}
                 </Typography>
                 <Box>{StatusElement}</Box>
@@ -172,17 +196,27 @@ const DoctorDetail = () => {
             <Typography sx={{ fontWeight: 600 }}>
               Miêu tả:
             </Typography>
-            <Box>{data?.user?.doctor_info.description}</Box>
+            {data?.user?.doctor_info?.html ? (
+              <Box>
+                {data?.user?.doctor_info.description}
+              </Box>
+            ) : (
+              <Typography>Chưa cập nhật...</Typography>
+            )}
           </Box>
           <Box sx={{ marginY: 2 }}>
             <Typography sx={{ fontWeight: 600 }}>
               Thông tin thêm:
             </Typography>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html: data?.user?.doctor_info.html
-              }}
-            ></Box>
+            {data?.user?.doctor_info?.html ? (
+              <Box
+                dangerouslySetInnerHTML={{
+                  __html: data?.user?.doctor_info.html
+                }}
+              ></Box>
+            ) : (
+              <Typography>Chưa cập nhật...</Typography>
+            )}
           </Box>
         </>
       )}

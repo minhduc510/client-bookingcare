@@ -1,21 +1,32 @@
 import { Box, Stack, Typography } from '@mui/material'
 
+import swal from '@/utils/swal'
 import Image from '@/components/Image'
 import colorCode from '@/configs/color'
-
 import BackGroundImage from '@/assets/images/background_grid_item.png'
 
-const CompreItem = () => {
+interface IProps {
+  name: string
+  image: string
+}
+
+const CompreItem = ({ name, image }: IProps) => {
   return (
     <Stack
       direction={'row'}
       alignItems={'center'}
       spacing={{ xs: 2, md: 10 }}
+      onClick={() => {
+        swal.warning(
+          'Chức năng này chưa hoàn thiện, mong bạn thông cảm :(('
+        )
+      }}
       sx={{
         width: { xs: '47%', sm: '47%', md: '48%' },
         border: `1px solid ${colorCode.grey300}`,
         borderRadius: 5,
         p: 2,
+        cursor: 'pointer',
         backgroundImage: (theme) =>
           `${
             theme.palette.mode === 'dark'
@@ -40,11 +51,8 @@ const CompreItem = () => {
           }
         }}
       >
-        {' '}
         <Image
-          src={
-            'https://cdn.bookingcare.vn/fo/w128/2023/06/07/161905-iconkham-chuyen-khoa.png'
-          }
+          src={image}
           alt={''}
           fill
           objectFit="contain"
@@ -60,7 +68,7 @@ const CompreItem = () => {
           }
         }}
       >
-        Dịch vụ toàn diện
+        {name}
       </Typography>
     </Stack>
   )

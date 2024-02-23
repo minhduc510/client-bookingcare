@@ -4,7 +4,7 @@ import {
   IoMdHome,
   FaUserDoctor,
   GiDoctorFace,
-  IoSettingsSharp,
+  AiFillSchedule,
   AiOutlineSchedule,
   TfiLayoutSliderAlt,
   LiaHospitalAltSolid
@@ -14,7 +14,7 @@ export const MENU_ADMIN = {
   controls: [
     {
       link: '/admin',
-      name: 'Dashboard',
+      name: 'Trang chủ',
       icon: IoMdHome,
       sizeIcon: 22
     },
@@ -57,15 +57,9 @@ export const MENU_ADMIN = {
   ],
   personal: [
     {
-      link: '/info',
+      link: '/admin/infomation',
       name: 'Thông tin cá nhân',
       icon: FaInfo,
-      sizeIcon: 16
-    },
-    {
-      link: '/settings',
-      name: 'Cài đặt',
-      icon: IoSettingsSharp,
       sizeIcon: 16
     }
   ]
@@ -73,6 +67,12 @@ export const MENU_ADMIN = {
 
 export const MENU_DOCTOR = {
   controls: [
+    {
+      link: '/doctor',
+      name: 'Trang chủ',
+      icon: IoMdHome,
+      sizeIcon: 22
+    },
     {
       link: '/doctor/list-schedule',
       name: 'D.Sách lịch khám',
@@ -84,19 +84,19 @@ export const MENU_DOCTOR = {
       name: 'Q.lý lịch khám',
       icon: FaUser,
       sizeIcon: 20
+    },
+    {
+      link: '/doctor/infomation-detail',
+      name: 'Thông tin chi tiết',
+      icon: AiFillSchedule,
+      sizeIcon: 20
     }
   ],
   personal: [
     {
-      link: '/info',
+      link: '/doctor/infomation',
       name: 'Thông tin cá nhân',
       icon: FaInfo,
-      sizeIcon: 16
-    },
-    {
-      link: '/settings',
-      name: 'Cài đặt',
-      icon: IoSettingsSharp,
       sizeIcon: 16
     }
   ]

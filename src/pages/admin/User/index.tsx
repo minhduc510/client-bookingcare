@@ -14,29 +14,20 @@ import {
   TableBody,
   Pagination,
   TableContainer,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
   Typography
 } from '@mui/material'
 
 import {
   FaPen,
-  FaLock,
   FaInfo,
   IoPersonAdd,
-  RiDeleteBin4Fill,
-  FaRegCircleCheck,
-  FaRegCircleXmark
+  RiDeleteBin4Fill
 } from '@/icons'
 
 import InputSearch from '@/components/InputSearch'
 import { useCallback, useState } from 'react'
 import swal from '@/utils/swal'
 import ModelAdd from './ModelAdd'
-import ModelLock from './ModelLock'
 import ModelInfo from './ModelInfo'
 import ModelUpdate from './ModelUpdate'
 
@@ -49,9 +40,7 @@ import {
 
 export default function User() {
   const [openModelAdd, setOpenModelAdd] = useState(false)
-  const [openModelLock, setOpenModelLock] = useState(false)
   const [openModelInfo, setOpenModelInfo] = useState(false)
-  const [status, setStatus] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [keyword, setKeyWord] = useState('')
   const [page, setPage] = useState(1)
@@ -107,12 +96,6 @@ export default function User() {
     debounceDropDown(value)
   }
 
-  const handleChangeStatus = (
-    event: SelectChangeEvent<number>
-  ) => {
-    setStatus(Number(event.target.value))
-  }
-
   const handleResetSearchAndKeyword = useCallback(() => {
     setSearchValue('')
     setKeyWord('')
@@ -128,9 +111,6 @@ export default function User() {
   }
   if (keyword) {
     querySearch.keyword = keyword
-  }
-  if (status) {
-    querySearch.status = status
   }
   const { data, isLoading, mutate } = useSWR(
     [linkApi.getAllUserClients, querySearch],
@@ -191,24 +171,6 @@ export default function User() {
             }
           }}
         >
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">
-                Age
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={status}
-                label="Age"
-                onChange={handleChangeStatus}
-              >
-                <MenuItem value={0}>Tất cả</MenuItem>
-                <MenuItem value={1}>Kích hoạt</MenuItem>
-                <MenuItem value={-1}>Đã khóa</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
           <Button
             onClick={() => setOpenModelAdd(true)}
             variant="contained"
@@ -269,9 +231,6 @@ export default function User() {
                       Số điện thoại
                     </TableCell>
                     <TableCell align="center">
-                      Tình trạng
-                    </TableCell>
-                    <TableCell align="center">
                       Lựa chọn
                     </TableCell>
                   </TableRow>
@@ -280,8 +239,8 @@ export default function User() {
                 <TableBody>
                   {data && data.data?.users.length > 0 ? (
                     data.data.users.map(
-                      (user: UserProps) => (
-                        <TableRow hover key={user.id}>
+                      (user: UserProps, index: number) => (
+                        <TableRow hover key={index}>
                           <TableCell align="center">
                             {user.fullName}
                           </TableCell>
@@ -296,43 +255,6 @@ export default function User() {
                           </TableCell>
                           <TableCell align="center">
                             {user.phone}
-                          </TableCell>
-                          <TableCell align="center">
-                            {user.status === 1 ? (
-                              <Box
-                                sx={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  gap: 1,
-                                  fontWeight: 600,
-                                  fontStyle: 'italic',
-                                  color: 'green'
-                                }}
-                              >
-                                <FaRegCircleCheck
-                                  size={18}
-                                />
-                                <span>Kích hoạt</span>
-                              </Box>
-                            ) : (
-                              <Box
-                                sx={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  gap: 1,
-                                  fontWeight: 600,
-                                  fontStyle: 'italic',
-                                  color: 'red'
-                                }}
-                              >
-                                <FaRegCircleXmark
-                                  size={18}
-                                />
-                                <span>Đã khóa</span>
-                              </Box>
-                            )}
                           </TableCell>
                           <TableCell
                             align="center"
@@ -384,26 +306,6 @@ export default function User() {
                                 }}
                               >
                                 <FaPen size={13} />
-                              </Box>
-                            </Tooltip>
-                            <Tooltip title="khóa tài khoản">
-                              <Box
-                                onClick={() =>
-                                  setOpenModelLock(true)
-                                }
-                                sx={{
-                                  bgcolor: 'orange',
-                                  width: 25,
-                                  height: 25,
-                                  borderRadius: '50%',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  color: 'white',
-                                  cursor: 'pointer'
-                                }}
-                              >
-                                <FaLock size={13} />
                               </Box>
                             </Tooltip>
                             <Tooltip title="Xóa tài khoản">
@@ -477,12 +379,6 @@ export default function User() {
           mutate={mutate}
           open={openModelAdd}
           closeModel={handleCloseModelAdd}
-        />
-      )}
-      {openModelLock && (
-        <ModelLock
-          open={openModelLock}
-          setOpen={setOpenModelLock}
         />
       )}
 

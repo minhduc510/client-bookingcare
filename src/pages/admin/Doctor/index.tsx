@@ -21,17 +21,15 @@ import {
   InputLabel,
   FormControl,
   TableContainer,
-  SelectChangeEvent
+  SelectChangeEvent,
+  Switch
 } from '@mui/material'
 
 import {
   FaPen,
-  FaLock,
   FaInfo,
   IoPersonAdd,
-  RiDeleteBin4Fill,
-  FaRegCircleCheck,
-  FaRegCircleXmark
+  RiDeleteBin4Fill
 } from '@/icons'
 
 import swal from '@/utils/swal'
@@ -42,16 +40,22 @@ import InputSearch from '@/components/InputSearch'
 
 import { apiHasToken, linkApi } from '@/api'
 import {
+  ListActiveProps,
   ParamsSearchUserProps,
   UserProps
 } from '@/interface'
 
 export default function Doctor() {
   const [openModelLock, setOpenModelLock] = useState(false)
-  const [status, setStatus] = useState(0)
+  const [status, setStatus] = useState<number>(999)
   const [searchValue, setSearchValue] = useState('')
   const [keyword, setKeyWord] = useState('')
   const [page, setPage] = useState(1)
+  const [disableSaveActiveBtn, setDisableSaveActiveBtn] =
+    useState(true)
+  const [listActive, setListActive] = useState<
+    ListActiveProps[]
+  >([])
   const [dataUser, setDataUser] = useState<UserProps[]>([])
 
   const handleDeleteUser = (id: number) => {
@@ -59,13 +63,16 @@ export default function Doctor() {
       .confirm('Bạn có chắc chắn muốn xóa?')
       .then(async ({ isConfirmed }) => {
         if (isConfirmed) {
-          const { error } = await apiHasToken.deleteUser(id)
+          const { error, message } =
+            await apiHasToken.deleteUser(id)
           if (!error) {
             swal
               .success('Xóa user thành công!')
               .then(() => {
                 mutate(linkApi.getAllUserDoctors)
               })
+          } else {
+            swal.error(message)
           }
         }
       })
@@ -82,6 +89,37 @@ export default function Doctor() {
     setStatus(Number(event.target.value))
   }
 
+  const handleActiveUser = (id: number) => {
+    setListActive((prev) => {
+      const clonePrev = [...prev]
+      const findItem = clonePrev.find(
+        (item) => item.id === id
+      )
+      if (findItem) {
+        findItem.checked = Number(!findItem.checked) as
+          | 0
+          | 1
+      }
+      return clonePrev
+    })
+  }
+
+  const saveActiveList = async () => {
+    swal
+      .confirm('Bạn có chắc chắn muốn lưu?')
+      .then(async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          const { error, message } =
+            await apiHasToken.updateActive(listActive)
+          if (!error) {
+            swal.success('Lưu thành công')
+          } else {
+            swal.error(message)
+          }
+        }
+      })
+  }
+
   const debounceDropDown = useCallback(
     debounce((value) => setKeyWord(value), 1500),
     []
@@ -93,7 +131,7 @@ export default function Doctor() {
   if (keyword) {
     querySearch.keyword = keyword
   }
-  if (status) {
+  if (status !== 999) {
     querySearch.status = status
   }
   const { data, isLoading, mutate } = useSWR(
@@ -111,8 +149,35 @@ export default function Doctor() {
   }, [])
 
   useEffect(() => {
+    if (data && data.data?.users) {
+      const listActiveDefault = data.data?.users.map(
+        (item: UserProps) => ({
+          id: item.id,
+          checked: item.status
+        })
+      )
+      if (
+        JSON.stringify(listActive) ===
+        JSON.stringify(listActiveDefault)
+      ) {
+        setDisableSaveActiveBtn(true)
+      } else {
+        setDisableSaveActiveBtn(false)
+      }
+    }
+  }, [JSON.stringify(listActive)])
+
+  useEffect(() => {
     if (data && !isLoading) {
       setDataUser(data.data?.users)
+      if (data.data?.users.length) {
+        setListActive(
+          data.data?.users.map((item: UserProps) => ({
+            id: item.id,
+            checked: item.status
+          }))
+        )
+      }
     }
   }, [isLoading, JSON.stringify(data?.data?.users)])
   return (
@@ -164,21 +229,32 @@ export default function Doctor() {
             }
           }}
         >
+          <Button
+            variant="contained"
+            color="warning"
+            sx={{ color: 'white' }}
+            disabled={disableSaveActiveBtn}
+            onClick={saveActiveList}
+          >
+            Lưu
+          </Button>
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
-                Age
+                Tình trạng
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={status}
-                label="Age"
+                label="Tình trạng"
                 onChange={handleChangeStatus}
               >
-                <MenuItem value={0}>Tất cả</MenuItem>
+                <MenuItem value={999}>Tất cả</MenuItem>
                 <MenuItem value={1}>Kích hoạt</MenuItem>
-                <MenuItem value={-1}>Đã khóa</MenuItem>
+                <MenuItem value={0}>
+                  Chưa kích hoạt
+                </MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -224,7 +300,7 @@ export default function Doctor() {
                 aria-label="sticky table"
                 sx={{
                   width: {
-                    xs: '800px',
+                    xs: '1000px',
                     md: '100%'
                   },
                   overflowX: 'auto'
@@ -232,25 +308,25 @@ export default function Doctor() {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'17%'}>
                       Họ tên
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'5%'}>
                       Giới tính
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'26%'}>
                       Địa chỉ
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'12%'}>
                       Email
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'10%'}>
                       Số điện thoại
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'10%'}>
                       Tình trạng
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" width={'10%'}>
                       Lựa chọn
                     </TableCell>
                   </TableRow>
@@ -258,75 +334,103 @@ export default function Doctor() {
 
                 <TableBody>
                   {dataUser?.length > 0 ? (
-                    dataUser.map((user: UserProps) => (
-                      <TableRow hover key={user.id}>
-                        <TableCell align="center">
-                          {user.fullName}
-                        </TableCell>
-                        <TableCell align="center">
-                          {' '}
-                          {user.gender ? 'Nữ' : 'Nam'}
-                        </TableCell>
-                        <TableCell align="center">
-                          {user.address}
-                        </TableCell>
-                        <TableCell align="center">
-                          {user.email}
-                        </TableCell>
-                        <TableCell align="center">
-                          {user.phone}
-                        </TableCell>
-                        <TableCell align="center">
-                          {user.status === 1 ? (
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 1,
-                                fontWeight: 600,
-                                fontStyle: 'italic',
-                                color: 'green'
-                              }}
-                            >
-                              <FaRegCircleCheck size={18} />
-                              <span>Kích hoạt</span>
-                            </Box>
-                          ) : (
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 1,
-                                fontWeight: 600,
-                                fontStyle: 'italic',
-                                color: 'red'
-                              }}
-                            >
-                              <FaRegCircleXmark size={18} />
-                              <span>Đã khóa</span>
-                            </Box>
-                          )}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 1,
-                            flexWrap: 'wrap',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <Tooltip title="xem chi tiết">
-                            <Link to={`${user.id}`}>
+                    dataUser.map(
+                      (user: UserProps, index) => (
+                        <TableRow hover key={user.id}>
+                          <TableCell align="center">
+                            {user.fullName}
+                          </TableCell>
+                          <TableCell align="center">
+                            {user.gender ? 'Nữ' : 'Nam'}
+                          </TableCell>
+                          <TableCell align="center">
+                            {user.address}
+                          </TableCell>
+                          <TableCell align="center">
+                            {user.email}
+                          </TableCell>
+                          <TableCell align="center">
+                            {user.phone}
+                          </TableCell>
+                          <TableCell align="center">
+                            <Switch
+                              onChange={() =>
+                                handleActiveUser(
+                                  Number(user.id)
+                                )
+                              }
+                              checked={Boolean(
+                                listActive[index].checked
+                              )}
+                            />
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: 1,
+                              padding: 3,
+                              flexWrap: 'wrap',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <Tooltip title="xem chi tiết">
+                              <Link to={`${user.id}`}>
+                                <Box
+                                  sx={{
+                                    bgcolor: 'blue',
+                                    width: 24,
+                                    height: 24,
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent:
+                                      'center',
+                                    color: 'white',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  <FaInfo size={15} />
+                                </Box>
+                              </Link>
+                            </Tooltip>
+                            <Tooltip title="cập nhật">
+                              <Link
+                                to={`/${path.admin.doctorUpdate.replace(
+                                  ':id',
+                                  ''
+                                )}${user.id}`}
+                              >
+                                <Box
+                                  sx={{
+                                    bgcolor: 'green',
+                                    width: 25,
+                                    height: 25,
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent:
+                                      'center',
+                                    color: 'white'
+                                  }}
+                                >
+                                  <FaPen size={13} />
+                                </Box>
+                              </Link>
+                            </Tooltip>
+                            <Tooltip title="Xóa tài khoản">
                               <Box
+                                onClick={() =>
+                                  handleDeleteUser(
+                                    Number(user.id)
+                                  )
+                                }
                                 sx={{
-                                  bgcolor: 'blue',
-                                  width: 24,
-                                  height: 24,
+                                  bgcolor: 'red',
+                                  width: 25,
+                                  height: 25,
                                   borderRadius: '50%',
                                   display: 'flex',
                                   alignItems: 'center',
@@ -335,78 +439,15 @@ export default function Doctor() {
                                   cursor: 'pointer'
                                 }}
                               >
-                                <FaInfo size={15} />
+                                <RiDeleteBin4Fill
+                                  size={15}
+                                />
                               </Box>
-                            </Link>
-                          </Tooltip>
-                          <Tooltip title="cập nhật">
-                            <Link
-                              to={`/${path.admin.doctorUpdate.replace(
-                                ':id',
-                                ''
-                              )}${user.id}`}
-                            >
-                              <Box
-                                sx={{
-                                  bgcolor: 'green',
-                                  width: 25,
-                                  height: 25,
-                                  borderRadius: '50%',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  color: 'white'
-                                }}
-                              >
-                                <FaPen size={13} />
-                              </Box>
-                            </Link>
-                          </Tooltip>
-                          <Tooltip title="khóa tài khoản">
-                            <Box
-                              onClick={() =>
-                                setOpenModelLock(true)
-                              }
-                              sx={{
-                                bgcolor: 'orange',
-                                width: 25,
-                                height: 25,
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'white',
-                                cursor: 'pointer'
-                              }}
-                            >
-                              <FaLock size={13} />
-                            </Box>
-                          </Tooltip>
-                          <Tooltip title="Xóa tài khoản">
-                            <Box
-                              onClick={() =>
-                                handleDeleteUser(
-                                  Number(user.id)
-                                )
-                              }
-                              sx={{
-                                bgcolor: 'red',
-                                width: 25,
-                                height: 25,
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'white',
-                                cursor: 'pointer'
-                              }}
-                            >
-                              <RiDeleteBin4Fill size={15} />
-                            </Box>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )
                   ) : (
                     <TableRow>
                       <TableCell

@@ -9,12 +9,12 @@ import {
   Alert
 } from '@mui/material'
 
+import { apiNoToken } from '@/api'
 import Loading from '@/components/Loading'
 import Options from '@/components/Options'
 import InputText from '@/components/InputText'
-import ReactLogo from '@/assets/svg/logo.svg?react'
 import { passwordValidation } from '@/validation'
-import { apiNoToken } from '@/api'
+import ReactLogo from '@/assets/svg/logo.svg?react'
 
 type Inputs = {
   passwordConfirm: string
@@ -89,7 +89,10 @@ const RecoverPassword = () => {
           </Box>
           <Box
             sx={{
-              width: '500px',
+              width: {
+                xs: '380px',
+                sm: '500px'
+              },
               p: 2,
               borderRadius: 1,
               boxShadow: (theme) =>

@@ -44,7 +44,10 @@ const DoctorSlice = () => {
       } else {
         setHiddenPrevBtn(false)
       }
-      if (after * SLIDE_TO_SHOW.pc >= lengthSlideItem - 1) {
+      if (
+        Math.ceil(after / SLIDE_TO_SHOW.pc) >=
+        Math.floor(lengthSlideItem / SLIDE_TO_SHOW.pc)
+      ) {
         setHiddenNextBtn(false)
       } else {
         setHiddenNextBtn(true)
@@ -56,7 +59,7 @@ const DoctorSlice = () => {
         breakpoint: 600,
         settings: {
           slidesToShow:
-            lengthSlideItem > SLIDE_TO_SHOW.pc
+            lengthSlideItem > SLIDE_TO_SHOW.mobile
               ? SLIDE_TO_SHOW.mobile
               : lengthSlideItem,
           slidesToScroll: SLIDE_TO_SHOW.mobile,
@@ -70,8 +73,10 @@ const DoctorSlice = () => {
               setHiddenPrevBtn(false)
             }
             if (
-              after * SLIDE_TO_SHOW.mobile >=
-              lengthSlideItem - 1
+              Math.ceil(after / SLIDE_TO_SHOW.mobile) >=
+              Math.floor(
+                lengthSlideItem / SLIDE_TO_SHOW.mobile
+              )
             ) {
               setHiddenNextBtn(false)
             } else {
@@ -82,7 +87,6 @@ const DoctorSlice = () => {
       }
     ]
   }
-
   const { data, isLoading } = useSWR(
     linkApi.getOutstandingDoctor,
     apiNoToken.getOutstandingDoctor(),
@@ -180,7 +184,7 @@ const DoctorSlice = () => {
             }
           }}
         >
-          {data && data.users.length > 0 && (
+          {data && lengthSlideItem > 0 ? (
             <Slider ref={slider} {...settings}>
               {data.users.map(
                 (
@@ -194,6 +198,14 @@ const DoctorSlice = () => {
                 )
               )}
             </Slider>
+          ) : (
+            <Typography
+              textAlign="center"
+              fontStyle="italic"
+              fontWeight={600}
+            >
+              Chưa có dữ liệu
+            </Typography>
           )}
 
           {lengthSlideItem >

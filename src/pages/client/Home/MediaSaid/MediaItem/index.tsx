@@ -1,8 +1,15 @@
 import { Box } from '@mui/material'
-import Image from '@/components/Image'
-import theme from '@/configs/theme'
+import { Link } from 'react-router-dom'
 
-const MediaItem = () => {
+import theme from '@/configs/theme'
+import Image from '@/components/Image'
+
+interface IProps {
+  link: string
+  image: string
+}
+
+const MediaItem = ({ image, link }: IProps) => {
   return (
     <Box
       sx={{
@@ -27,23 +34,33 @@ const MediaItem = () => {
         paddingY: 1.3
       }}
     >
-      <Box
-        sx={{
-          position: 'relative',
-          width: '100%',
-          height: '100%'
-        }}
-      >
-        {' '}
-        <Image
-          src={
-            'https://bookingcare.vn/assets/truyenthong/vtv1.png'
-          }
-          alt={''}
-          fill
-          objectFit="contain"
-        />
-      </Box>
+      <Link to={link}>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              margin: 'auto',
+              width: {
+                xs: '100%',
+                md: '60%'
+              },
+              height: '100%'
+            }}
+          >
+            <Image
+              src={image}
+              alt={'news'}
+              fill
+              objectFit="contain"
+            />
+          </Box>
+        </Box>
+      </Link>
     </Box>
   )
 }

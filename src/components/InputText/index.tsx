@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
+import colorCode from '@/configs/color'
 import { TextField } from '@mui/material'
 import { RefObject, forwardRef } from 'react'
 
 interface IProps {
   label: string
   name: string
+  readOnly?: boolean
   error: string | undefined
   type?: 'text' | 'password'
   size?: 'small' | 'medium'
@@ -29,6 +31,7 @@ const InputText = forwardRef(
       error,
       type = 'text',
       size = 'small',
+      readOnly = false,
       onChange
     }: IProps,
     ref: RefType
@@ -42,9 +45,17 @@ const InputText = forwardRef(
         name={name}
         type={type}
         size={size}
+        inputProps={{ readOnly }}
         sx={{
           width: '100%',
-          maxWidth: '600px'
+          maxWidth: '600px',
+          bgcolor: (theme) => {
+            return readOnly
+              ? theme.palette.mode === 'dark'
+                ? 'primary.light'
+                : colorCode.grey200
+              : 'auto'
+          }
         }}
         onChange={onChange}
       />

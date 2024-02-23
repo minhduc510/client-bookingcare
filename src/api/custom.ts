@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 import localStorage from '@/utils/localStorage'
 
 const axiosInstance = axios.create({
@@ -14,6 +14,15 @@ const axiosInstance2 = axios.create({
     'Content-Type': 'application/json'
   }
 })
+
+const callApi = {
+  get: (axiosInstance: AxiosInstance) => {
+    return async (url: string) => {
+      const response = await axiosInstance.get(url)
+      return response.data
+    }
+  }
+}
 
 axiosInstance.interceptors.response.use(
   function (response) {
@@ -51,4 +60,4 @@ axiosInstance2.interceptors.response.use(
   }
 )
 
-export { axiosInstance, axiosInstance2 }
+export { axiosInstance, axiosInstance2, callApi }

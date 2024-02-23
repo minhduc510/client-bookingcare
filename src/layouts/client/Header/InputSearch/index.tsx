@@ -7,7 +7,6 @@ const InputSearch = () => {
   return (
     <Stack
       direction="row"
-      justifyContent="space-between"
       alignItems="center"
       spacing={1}
       sx={{

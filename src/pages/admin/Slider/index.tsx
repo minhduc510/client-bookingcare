@@ -30,7 +30,7 @@ import ItemSlide from './ItemSlide'
 import Loading from '@/components/Loading'
 import { IoPersonAdd } from '@/icons'
 import { ISliceProps } from '@/interface'
-import { apiHasToken, linkApi } from '@/api'
+import { apiHasToken, apiNoToken, linkApi } from '@/api'
 
 const dataFake = [
   {
@@ -130,7 +130,7 @@ const Slider = () => {
 
   const { data, isLoading, mutate } = useSWR(
     linkApi.getAllSlide,
-    apiHasToken.getAllSlide(),
+    apiNoToken.getAllSlide(),
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,

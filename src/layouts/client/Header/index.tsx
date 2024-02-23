@@ -16,15 +16,22 @@ import path from '@/routes/path'
 import { FaUserLarge } from '@/icons'
 import colorCode from '@/configs/color'
 import InputSearch from './InputSearch'
-import { useAppSelector } from '@/redux/hooks'
+import {
+  useAppDispatch,
+  useAppSelector
+} from '@/redux/hooks'
 import { stateUserSlice } from '@/redux/slices/user'
 import ClockLogo from '@/assets/svg/clock.svg?react'
-import { stateLoginSlice } from '@/redux/slices/auth'
+import {
+  stateLoginSlice,
+  logoutAdded
+} from '@/redux/slices/auth'
 import BookingCareLogo from '@/assets/svg/logo.svg?react'
 import { stateTotalBookingSlice } from '@/redux/slices/totalBooking'
 
 const Header = () => {
   const { login } = useAppSelector(stateLoginSlice)
+  const dispatch = useAppDispatch()
   const { fullName, avatar } =
     useAppSelector(stateUserSlice)
   const totalBooking = useAppSelector(
@@ -195,21 +202,32 @@ const Header = () => {
                       >
                         <MenuItem
                           sx={{ fontSize: '0.95rem' }}
-                          onClick={handleClose}
                         >
-                          Profile
+                          <Link
+                            to={`${path.client.personalInfo}`}
+                            onClick={handleClose}
+                          >
+                            Thông tin cá nhân
+                          </Link>
                         </MenuItem>
                         <MenuItem
                           sx={{ fontSize: '0.95rem' }}
-                          onClick={handleClose}
                         >
-                          My account
+                          <Link
+                            to={`${path.client.booking}`}
+                            onClick={handleClose}
+                          >
+                            Lịch hẹn
+                          </Link>
                         </MenuItem>
                         <MenuItem
                           sx={{ fontSize: '0.95rem' }}
-                          onClick={handleClose}
+                          onClick={() => {
+                            dispatch(logoutAdded())
+                            handleClose()
+                          }}
                         >
-                          Logout
+                          Đăng xuất
                         </MenuItem>
                       </Menu>
                     </>

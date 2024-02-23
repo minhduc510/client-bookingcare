@@ -293,27 +293,33 @@ const DoctorUpdate = () => {
     setLoading(false)
   }
 
-  useEffect(() => {
-    const callApi = async () => {
-      const { error, data } =
-        await apiNoToken.getAllSpecialist()
-      if (!error) {
-        if (data.length) {
-          setSpecialists(
-            data.map(
-              (item: ISpecialistProps) =>
-                `${item.id}-${item.name}`
-            )
-          )
-        }
-      }
-      setLoading(false)
+  const {
+    data: dataSpecialist,
+    isLoading: isLoadingSpecialist
+  } = useSWR(
+    linkApi.getAllSpecialist,
+    apiNoToken.getAllSpecialist(),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
     }
-    callApi()
-  }, [loading])
+  )
+  useEffect(() => {
+    if (dataSpecialist) {
+      if (dataSpecialist.data.length) {
+        setSpecialists(
+          dataSpecialist.data.map(
+            (item: ISpecialistProps) =>
+              `${item.id}-${item.name}`
+          )
+        )
+      }
+    }
+  }, [isLoadingSpecialist])
 
   useEffect(() => {
-    if (data && data.user) {
+    if (data && data.user && data.user.doctor_info) {
       reset({
         email: data.user.email,
         phone: data.user.phone,
@@ -643,7 +649,7 @@ const DoctorUpdate = () => {
                     )}
                   >
                     {!isLoading &&
-                      listPosition?.data.map(
+                      listPosition?.data?.map(
                         (item: PositionProps) => (
                           <MenuItem
                             key={item.id}

@@ -167,7 +167,6 @@ const ModelAdd = ({ mutate, open, closeModel }: IProps) => {
 
   return (
     <>
-      {' '}
       {loading && <Loading open={loading} />}
       <Modal
         aria-labelledby="transition-modal-title"

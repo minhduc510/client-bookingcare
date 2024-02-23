@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable indent */
 import useSWR from 'swr'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Avatar,
@@ -15,21 +16,22 @@ import {
   Typography
 } from '@mui/material'
 
-import colorCode from '@/configs/color'
-import Loading from '@/components/Loading'
-import { apiNoToken, linkApi } from '@/api'
 import {
   PositionProps,
   ScheduleDayBookProps,
   ScheduleDayProps
 } from '@/interface'
-import { useEffect, useState } from 'react'
-import formatCurrency from '@/utils/formatCurrency'
 import {
   FaRegCalendarAlt,
   TiArrowSortedDown
 } from '@/icons'
+import colorCode from '@/configs/color'
+import Loading from '@/components/Loading'
+import { apiNoToken, linkApi } from '@/api'
+import LikeFbBtn from '@/components/LikeFbBtn'
 import ModelBookSchedule from './ModelBookSchedule'
+import formatCurrency from '@/utils/formatCurrency'
+import CommentFb from '@/components/CommentFb'
 
 type Hour = {
   id: number
@@ -141,6 +143,15 @@ const DetailDoctor = () => {
                     {data?.user?.doctor_info?.description}
                   </Typography>
                 )}
+                <Box
+                  sx={{
+                    '& iframe': {
+                      width: '250px !important'
+                    }
+                  }}
+                >
+                  <LikeFbBtn />
+                </Box>
               </Box>
             </Stack>
             <Grid
@@ -315,7 +326,6 @@ const DetailDoctor = () => {
                   </Typography>
                   {hidePriceList ? (
                     <>
-                      {' '}
                       <Typography
                         sx={{
                           fontWeight: 600,
@@ -558,6 +568,10 @@ const DetailDoctor = () => {
             >
               <Container>
                 <Box
+                  sx={{
+                    ul: { listStyle: 'disc' },
+                    paddingX: 2
+                  }}
                   dangerouslySetInnerHTML={{
                     __html: data?.user.doctor_info?.html
                   }}
@@ -565,6 +579,11 @@ const DetailDoctor = () => {
               </Container>
             </Box>
           )}
+          <Box>
+            <Container>
+              <CommentFb />
+            </Container>
+          </Box>
         </>
       )}
       <ModelBookSchedule

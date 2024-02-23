@@ -1,12 +1,19 @@
 import {
+  Role,
   LoginProps,
   MarkdownProps,
   RegisterProps,
+  BookingBodyProps,
   ScheduleBodyProps,
   ParamsSearchUserProps,
-  BookingBodyProps
+  InfoDoctorProps,
+  ListActiveProps
 } from '@/interface'
-import { axiosInstance, axiosInstance2 } from './custom'
+import {
+  callApi,
+  axiosInstance,
+  axiosInstance2
+} from './custom'
 
 const linkApi = {
   getAllUserClients:
@@ -35,7 +42,14 @@ const linkApi = {
   }/api/bookings/client`,
   getDoctorBooking: `${
     import.meta.env.VITE_URL_SERVER
-  }/api/bookings/doctor`
+  }/api/bookings/doctor`,
+  getAllSpecialist: `${
+    import.meta.env.VITE_URL_SERVER
+  }/api/specialists`,
+  getSpecialist: (specialistId: number) =>
+    `${
+      import.meta.env.VITE_URL_SERVER
+    }/api/specialists/${specialistId}`
 }
 
 const apiNoToken = {
@@ -75,27 +89,41 @@ const apiNoToken = {
     )
     return response.data
   },
-  getOutstandingDoctor: () => {
-    return async (url: string) => {
-      const response = await axiosInstance.get(url)
-      return response.data
-    }
-  },
-  getDetailDoctor: () => {
-    return async (url: string) => {
-      const response = await axiosInstance.get(url)
-      return response.data
-    }
-  },
-  getAllSpecialist: async () => {
+  getSpecialist: async (specialistId: number) => {
     const response = await axiosInstance.get(
-      'api/specialists'
+      `/api/specialists/${specialistId}`
     )
     return response.data
   },
-  getSpecialist: async (id: number) => {
+  getOutstandingDoctor: () => {
+    return callApi.get(axiosInstance)
+  },
+  getDetailDoctor: () => {
+    return callApi.get(axiosInstance)
+  },
+  getAllSpecialist: () => {
+    return callApi.get(axiosInstance)
+  },
+  getAllSlide: () => {
+    return callApi.get(axiosInstance)
+  },
+  loginSocial: async (id: string) => {
     const response = await axiosInstance.get(
-      'api/specialists/' + id
+      '/api/auth/user-social-login/' + id
+    )
+    return response.data
+  },
+  checkAuthRoleLogin: async (
+    nameRole: Role,
+    token: string
+  ) => {
+    const response = await axiosInstance2.get(
+      `api/auth/auth-role-login/${nameRole}`,
+      {
+        headers: {
+          Authorization: 'Bearer ' + token //the token is a variable which holds the token
+        }
+      }
     )
     return response.data
   }
@@ -113,11 +141,40 @@ const apiHasToken = {
     )
     return response.data
   },
+  updateCurrent: async (body: FormData) => {
+    const response = await axiosInstance2.post(
+      'api/user/update-current',
+      body,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    )
+    return response.data
+  },
+  updateActive: async (listActive: ListActiveProps[]) => {
+    const response = await axiosInstance2.put(
+      'api/user/active-user',
+      { listActive }
+    )
+    return response.data
+  },
+  updateDoctorCurrent: async (body: InfoDoctorProps) => {
+    const response = await axiosInstance2.put(
+      'api/user/doctor-info',
+      body
+    )
+    return response.data
+  },
+  changePassword: async (
+    passwordOld: string,
+    passwordNew: string
+  ) => {
+    const response = await axiosInstance2.post(
+      'api/user/change-password',
+      { passwordOld, passwordNew }
+    )
+    return response.data
+  },
   getUser: () => {
-    return async (url: string) => {
-      const response = await axiosInstance2.get(url)
-      return response.data
-    }
+    return callApi.get(axiosInstance2)
   },
   createUser: async (body: FormData) => {
     const response = await axiosInstance2.post(
@@ -149,12 +206,6 @@ const apiHasToken = {
       const response = await axiosInstance2.get(url, {
         params: options
       })
-      return response.data
-    }
-  },
-  getAllSlide: () => {
-    return async (url: string) => {
-      const response = await axiosInstance2.get(url)
       return response.data
     }
   },
@@ -201,10 +252,7 @@ const apiHasToken = {
     return response.data
   },
   getAllPosition: () => {
-    return async (url: string) => {
-      const response = await axiosInstance2.get(url)
-      return response.data
-    }
+    return callApi.get(axiosInstance2)
   },
   createPosition: async (body: { name: string }) => {
     const response = await axiosInstance2.post(
@@ -247,10 +295,7 @@ const apiHasToken = {
     return response.data
   },
   getScheduleByUserId: () => {
-    return async (url: string) => {
-      const response = await axiosInstance2.get(url)
-      return response.data
-    }
+    return callApi.get(axiosInstance2)
   },
   removeHour: async (id: number) => {
     const response = await axiosInstance2.delete(
@@ -266,16 +311,10 @@ const apiHasToken = {
     return response.data
   },
   getClientBooking: () => {
-    return async (url: string) => {
-      const response = await axiosInstance2.get(url)
-      return response.data
-    }
+    return callApi.get(axiosInstance2)
   },
   getDoctorBooking: () => {
-    return async (url: string) => {
-      const response = await axiosInstance2.get(url)
-      return response.data
-    }
+    return callApi.get(axiosInstance2)
   },
   removeClientBooking: async (body: number[]) => {
     let params = '?'

@@ -69,7 +69,10 @@ const ForgotPasswordDoctor = () => {
           </Box>
           <Box
             sx={{
-              width: '500px',
+              width: {
+                xs: '380px',
+                sm: '500px'
+              },
               p: 2,
               borderRadius: 1,
               boxShadow: (theme) =>
